@@ -4,6 +4,7 @@ Dotfile configuration for both general bash usage, nvim and tmux but there is ro
 
 ## Requirements
 - git
+- [Starship](https://starship.rs/guide/#%F0%9F%9A%80-installation)
 
 ## Instructions
 ```
