@@ -117,6 +117,7 @@ if ! shopt -oq posix; then
 fi
  
 eval "$(starship init bash)"
+export PATH="$PATH:/usr/bin/nvim"
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
