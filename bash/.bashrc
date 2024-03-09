@@ -118,6 +118,7 @@ fi
  
 eval "$(starship init bash)"
 export PATH="$PATH:/usr/bin/nvim"
+export PATH="$PATH:~/apps/blender-3.6.3-linux-x64/blender"
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
@@ -133,4 +134,4 @@ else
 fi
 unset __conda_setup
 # <<< conda initialize <<<
-
+eval "$(zoxide init bash)"

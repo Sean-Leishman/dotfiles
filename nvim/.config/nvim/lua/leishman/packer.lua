@@ -48,4 +48,5 @@ return require('packer').startup(function(use)
         }
     }
     use('p00f/clangd_extensions.nvim')
+    use('github/copilot.vim')
 end)
