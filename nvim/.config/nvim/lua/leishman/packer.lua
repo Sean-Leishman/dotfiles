@@ -1,4 +1,10 @@
 -- This file can be loaded by calling `lua require('plugins')` from your init.vim
+local packer = require('packer')
+packer.util = require('packer.util')
+
+packer.init({
+    max_jobs = 10,
+})
 
 -- Only required if you have packer configured as `opt`
 vim.cmd [[packadd packer.nvim]]
@@ -6,7 +12,6 @@ vim.cmd [[packadd packer.nvim]]
 return require('packer').startup(function(use)
     -- Packer can manage itself
     use 'wbthomason/packer.nvim'
-    use { 'ojroques/nvim-osc52' }
     -- install without yarn or npm
     use({
         "iamcco/markdown-preview.nvim",
