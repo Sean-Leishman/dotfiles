@@ -1,6 +1,6 @@
 #!/usr/bin/bash 
 
-STOWED_FOLDERS=("bash" "nvim" "tmux" "starship")
+STOWED_FOLDERS=("bash" "nvim" "tmux" "starship" "oh-my-posh")
 
 for item in "${STOWED_FOLDERS[@]}"
 do 
