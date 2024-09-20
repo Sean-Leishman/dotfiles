@@ -116,10 +116,12 @@ if ! shopt -oq posix; then
   fi
 fi
 
-eval "$(oh-my-posh init bash --config ~/.config/oh-my-posh/emodipt-extend.omp.json)"
 
 export PATH="$PATH:/usr/bin/nvim"
 export PATH="$PATH:~/apps/blender-3.6.3-linux-x64/blender"
+export PATH="$PATH:~/.local/bin"
+
+eval "$(oh-my-posh init bash --config ~/.config/oh-my-posh/emodipt-extend.omp.json)"
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
