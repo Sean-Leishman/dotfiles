@@ -116,11 +116,7 @@ if ! shopt -oq posix; then
   fi
 fi
 
-
-export PATH="$PATH:/usr/bin/nvim"
-export PATH="$PATH:~/apps/blender-3.6.3-linux-x64/blender"
-export PATH="$PATH:~/.local/bin"
-
+source ~/.profile
 eval "$(oh-my-posh init bash --config ~/.config/oh-my-posh/emodipt-extend.omp.json)"
 
 # >>> conda initialize >>>
@@ -137,9 +133,6 @@ else
 fi
 unset __conda_setup
 # <<< conda initialize <<<
+
 eval "$(zoxide init bash)"
 
-export NVM_DIR="$HOME/.config/nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-. "$HOME/.cargo/env"
