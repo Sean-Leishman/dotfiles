@@ -55,4 +55,11 @@ return require('packer').startup(function(use)
     use('p00f/clangd_extensions.nvim')
     use('github/copilot.vim')
     use('tpope/vim-surround')
+    use({
+        "stevearc/conform.nvim",
+        config = function()
+            require("conform").setup()
+        end,
+    })
+    use('mfussenegger/nvim-lint')
 end)
