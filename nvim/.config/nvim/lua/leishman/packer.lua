@@ -24,7 +24,7 @@ return require('packer').startup(function(use)
         requires = { { 'nvim-lua/plenary.nvim' } }
     }
     use 'BurntSushi/ripgrep'
-    use('nvim-treesitter/nvim-treesitter', { run = ':TSUpdate' })
+    use('nvim-treesitter/nvim-treesitter', { run = ':TSUpdate', branch="master" })
     use {
         'embark-theme/vim',
         as = 'embark',

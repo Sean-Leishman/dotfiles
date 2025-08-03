@@ -70,9 +70,16 @@ ENABLE_CORRECTION="true"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git)
+plugins=(git zsh-autosuggestions zsh-syntax-highlighting history-substring-search)
 
 source $ZSH/oh-my-zsh.sh
+
+source $ZSH/custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source $ZSH/custom/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh
+
+bindkey $terminfo[kcuu1] history-substring-search-up
+bindkey $terminfo[kcud1] history-substring-search-down
+
 
 # User configuration
 
@@ -110,9 +117,9 @@ if [ $? -eq 0 ]; then
     eval "$__conda_setup"
 else
     if [ -f "/home/seanleishman/anaconda3/etc/profile.d/conda.sh" ]; then
-        . "/home/seanleishman/anaconda3/etc/profile.d/conda.sh"
+# . "/home/seanleishman/anaconda3/etc/profile.d/conda.sh"  # commented out by conda initialize
     else
-        export PATH="/home/seanleishman/anaconda3/bin:$PATH"
+# export PATH="/home/seanleishman/anaconda3/bin:$PATH"  # commented out by conda initialize
     fi
 fi
 unset __conda_setup
@@ -122,3 +129,5 @@ alias icat="kitten icat"
 
 eval "$(oh-my-posh init zsh --config ~/.config/oh-my-posh/emodipt-extend.omp.json)"
 eval "$(zoxide init zsh)"
+
+POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(anaconda ...ENVS)

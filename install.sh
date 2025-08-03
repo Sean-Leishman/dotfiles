@@ -1,9 +1,9 @@
-#!/usr/bin/bash 
+#!/usr/bin/bash
 
-STOWED_FOLDERS=("bash" "nvim" "tmux" "starship" "oh-my-posh")
+STOWED_FOLDERS=("bash" "nvim" "tmux" "starship" "oh-my-posh" "zsh" "profile")
 
 for item in "${STOWED_FOLDERS[@]}"
-do 
+do
     echo "Stowing {$item}"
 
     stow -D $item
