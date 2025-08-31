@@ -189,7 +189,7 @@ Clear search highlighting: `<leader><CR>`
 | `<leader>pf` | Fuzzy find files |
 | `<leader>gf` | Find Git tracked files |
 
-## 🔌 Plugin Configuration
+## Plugin Configuration
 
 ### Harpoon - Quick File Navigation
 | Key | Action |
@@ -243,7 +243,7 @@ Clear search highlighting: `<leader><CR>`
 | `<M-Right>` | Accept next word |
 | `<M-C-Right>` | Accept next line |
 
-## 🖥️ Tmux Configuration
+## Tmux Configuration
 
 ### Key Settings
 - **Prefix key:** `Ctrl-a` (instead of default `Ctrl-b`)
@@ -266,7 +266,7 @@ Ctrl-a "                   # Split horizontally
 Ctrl-a [0-9]              # Switch to window number
 ```
 
-## 📚 Getting Help
+## Getting Help
 
 ### Vim Help System
 | Type | Prefix | Example |
