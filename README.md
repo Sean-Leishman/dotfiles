@@ -1,338 +1,298 @@
 # .dotfiles
 
-Dotfile configuration for both general bash usage, nvim and tmux but there is room to extend. `stow` is used in order to automatically symlink dotfiles. This configuration is for use with linux systems.
+A comprehensive dotfile configuration for Linux systems featuring Neovim, Tmux, and Zsh with Oh My Zsh. Uses GNU Stow for automatic symlinking.
 
-## Instructions
-Ensure that `stow` is installed.
-```
+## Table of Contents
+
+- [Prerequisites](#-prerequisites)
+- [Quick Start](#-quick-start)
+- [Setup Instructions](#-setup-instructions)
+  - [Neovim](#neovim)
+  - [Oh My Zsh](#oh-my-zsh)
+- [Reference Guide](#-reference-guide)
+  - [Vim Motions & Commands](#vim-motions--commands)
+  - [Search & Replace](#search--replace)
+  - [File Operations](#file-operations)
+- [Custom Keymaps](#-custom-keymaps)
+  - [Essential Shortcuts](#essential-shortcuts)
+  - [File Navigation (Telescope)](#file-navigation-telescope)
+- [Plugin Configuration](#-plugin-configuration)
+  - [Harpoon - Quick File Navigation](#harpoon---quick-file-navigation)
+  - [Vim-Surround - Edit Surrounding Characters](#vim-surround---edit-surrounding-characters)
+  - [Undotree - Visualize Undo History](#undotree---visualize-undo-history)
+  - [LSP Features](#lsp-features)
+  - [Auto-completion (nvim-cmp)](#auto-completion-nvim-cmp)
+  - [GitHub Copilot](#github-copilot)
+- [Tmux Configuration](#️-tmux-configuration)
+  - [Key Settings](#key-settings)
+  - [Basic Commands](#basic-commands)
+- [Getting Help](#-getting-help)
+  - [Vim Help System](#vim-help-system)
+  - [LSP Management](#lsp-management)
+- [Plugin Management](#-plugin-management)
+- [External Tools](#-external-tools)
+
+
+## Prerequisites
+
+- [GNU Stow](https://www.gnu.org/software/stow/) - for managing dotfile symlinks
+- Git
+- Curl
+
+## Quick Start
+
+```bash
 cd .dotfiles
 chmod +x ./install.sh
 ./install.sh
 ```
 
-## nvim
-Install the newest version of nvim and create a symbolic link.
-```
-curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
-chmod u+x nvim.appimage
-sudo ln -s ./nvim.appimage /usr/local/bin/nvim
-```
+## Setup Instructions
 
-Packer should also be installed and run for the best experience.
-```
-git clone --depth 1 https://github.com/wbthomason/packer.nvim\
- ~/.local/share/nvim/site/pack/packer/start/packer.nvim
- :PackerSync
-```
+### Neovim
 
-## `oh-my-zsh`
-Install `oh-my-zsh`.
-```
+1. **Install the latest Neovim:**
+   ```bash
+   curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
+   chmod u+x nvim.appimage
+   sudo ln -s ./nvim.appimage /usr/local/bin/nvim
+   ```
+
+2. **Install Packer (plugin manager):**
+   ```bash
+   git clone --depth 1 https://github.com/wbthomason/packer.nvim \
+     ~/.local/share/nvim/site/pack/packer/start/packer.nvim
+   ```
+
+3. **Sync plugins in Neovim:**
+   ```
+   :PackerSync
+   ```
+
+### Oh My Zsh
+
+```bash
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 ```
 
-# Reference Sheet
-## `nvim`
-### Vim Motions
-Three important modes in `nvim`:
-- Normal mode: for navigating and manipulating text
-- Insert mode: for inserting text
-- Visual mode: for selecting text
+## Reference Guide
 
-Switch from normal mode to insert mode with:
-```
-i  # Insert before the cursor
-I  # Insert at the beginning of the line
-a  # Insert after the cursor
-A  # Insert at the end of the line
-o  # Open a new line below the current line and insert
-O  # Open a new line above the current line and insert
-```
-Switch from normal mode to visual mode with:
-```
-v  # Start visual mode (character-wise)
-V  # Start visual line mode
-<C-v>  # Start visual block mode
-```
+### Vim Motions & Commands
 
-Jumping around in normal mode:
-```
-h  # Move left
-j  # Move down
-k  # Move up
-l  # Move right
-w  # Jump to the start of the next word
-b  # Jump to the start of the previous word
-e  # Jump to the end of the current/next word
-B  # Jump to the start of the previous WORD (WORDs are separated by whitespace)
-0 (remapped to 9)  # Jump to the beginning of the line
-$ (remapped to 0) # Jump to the end of the line
-gg # Jump to the beginning of the file
-G  # Jump to the end of the file
+#### Modes
+- **Normal mode** - Navigate and manipulate text
+- **Insert mode** - Type and edit text
+- **Visual mode** - Select text
 
-<C-d>  # Scroll down half a page
-<C-u>  # Scroll up half a page
-```
+#### Entering Insert Mode
+| Key | Action |
+|-----|--------|
+| `i` | Insert before cursor |
+| `I` | Insert at beginning of line |
+| `a` | Insert after cursor |
+| `A` | Insert at end of line |
+| `o` | New line below and insert |
+| `O` | New line above and insert |
 
-Deleting text:
-```
-x  # Delete the character under the cursor
-d # Delete (can be combined with motions, e.g. dw deletes a word)
-```
+#### Visual Mode
+| Key | Action |
+|-----|--------|
+| `v` | Character-wise visual |
+| `V` | Line-wise visual |
+| `<C-v>` | Block visual |
 
-Copying text:
-```
-y  # Yank (copy) (can be combined with motions, e.g. yw yanks a word)
-p  # Paste after the cursor
-P  # Paste before the cursor
-```
+#### Movement
+| Key | Action |
+|-----|--------|
+| `h j k l` | Left, down, up, right |
+| `w` | Next word start |
+| `b` | Previous word start |
+| `e` | End of word |
+| `9` | Beginning of line (remapped from `0`) |
+| `0` | End of line (remapped from `$`) |
+| `gg` | File start |
+| `G` | File end |
+| `<C-d>` | Scroll down half page |
+| `<C-u>` | Scroll up half page |
+| `{` | Previous paragraph |
+| `}` | Next paragraph |
 
-Undo and Redo:
-```
-u  # Undo
-<C-r>  # Redo
-```
+#### Text Objects
+| Command | Action |
+|---------|--------|
+| `ci{` | Change inside braces |
+| `ca(` | Change around parentheses |
+| `di"` | Delete inside quotes |
+| `da'` | Delete around single quotes |
+| `yt{` | Yank until next `{` |
+| `dt'` | Delete until next `'` |
 
-Vim Motions can be combined with numbers to repeat them multiple times, e.g. `3w` jumps forward three words.
-```
-[count]<operator>[count]<motion>
-```
+#### Operations
+| Key | Action |
+|-----|--------|
+| `x` | Delete character |
+| `d` | Delete (combine with motions) |
+| `y` | Yank/copy (combine with motions) |
+| `p` | Paste after |
+| `P` | Paste before |
+| `u` | Undo |
+| `<C-r>` | Redo |
 
-### Useful Vim Motions
-Move to the next/previous paragraph:
-```
-{  # Move to the beginning of the previous paragraph
-}  # Move to the beginning of the next paragraph
-```
-Change inside/around:
-```
-ci{  # Change inside curly braces
-ca(  # Change around parentheses (including the parentheses)
-```
-Delete inside/around:
-```
-di"  # Delete inside double quotes
-da'  # Delete around single quotes
+### Search & Replace
+
+#### Basic Search
+```vim
+/{pattern}     " Search forward
+?{pattern}     " Search backward
+n              " Next match
+N              " Previous match
+*              " Search word under cursor forward
+#              " Search word under cursor backward
 ```
 
-Copy/delete/chain until next occurrence of a character:
-```
-yt{  # Yank until (but not including) the next {
-dt'  # Delete until (but not including) the next '
-cT)  # Change until (but not including) the previous )
-```
-
-
-
-Read and insert the contents of a file at the current line:
-```
-:r {FILENAME}
-```
-Read and insert the output of a shell command at the current line:
-```
-:r !{SHELL_COMMAND}
+#### Find & Replace
+```vim
+:%s/{search}/{replace}/g         " Replace all in file
+:%s/{search}/{replace}/gc        " Replace all with confirmation
+:{start},{end}s/{search}/{replace}/g  " Replace in range
 ```
 
-## Find and Replace
-Find and replace in the entire file (the % operator means the entire file):
-```
-:%s/{SEARCH}/{REPLACE}/g
-```
-Other options can be added after the final `/` such as `c` to confirm each replacement.
-Or to only replace the first instance on each line, remove the `g`.
-Add `i` to make the search case insensitive.
-
-Simply finding a word can be done with:
-```
-/{SEARCH}
-```
-Then use `n` to go to the next instance and `N` to go to the previous instance.
-Additionally, options can be added such as `\c` to make the search case insensitive.
-
-To search and replace in a specific range of lines, specify the line numbers before the `s`:
-```
-:{START_LINE},{END_LINE}s/{SEARCH}/{REPLACE}/g
+#### Search Settings
+Our configuration includes these search enhancements:
+```vim
+set ignorecase smartcase  " Smart case sensitivity
+set incsearch hlsearch    " Incremental search with highlighting
 ```
 
-Use `*` to search for the word under the cursor and `#` to search backwards for the word under the cursor.
+Clear search highlighting: `<leader><CR>`
 
-To make it easier to search we can set the following:
-```
-vim.opt.ignorecase = true -- Ignore case in searches
-vim.opt.smartcase = true  -- Override ignorecase if search contains uppercase letters
-vim.opt.incsearch = true  -- Show search matches as we type
-vim.opt.hlsearch = true   -- Highlight all search matches
-```
-and then to clear the search highlighting, use:
-```
-<leader><CR>
+### File Operations
+```vim
+:r {filename}        " Insert file contents
+:r !{command}        " Insert command output
+<leader>ps          " Project-wide search (grep)
 ```
 
+## Custom Keymaps
 
-### Searching across project files
-To search across all files in the current directory and its subdirectories, use:
-```
-<leader>ps
-```
-which runs the built-in `grep` command. You will be prompted to enter the search term.
+### Essential Shortcuts
+| Key | Action |
+|-----|--------|
+| `gV` | Reselect last visual selection |
+| `Y` | Yank to end of line |
+| `<leader><leader>` | Switch between last two buffers |
+| `<leader><CR>` | Clear search highlighting |
 
-# Other useful commands
-## Useful remaps
-In normal mode, we can use "gV" to reselect the last visual selection.
-```
-vim.keymap.set('n', 'gV', '`[v`]')
-```
+### File Navigation (Telescope)
+| Key | Action |
+|-----|--------|
+| `<leader>pf` | Fuzzy find files |
+| `<leader>gf` | Find Git tracked files |
 
-We can remap `y$` to make it behave like other capitalized commands such as `D` and `C`, which operate from the cursor position to the end of the line.
-```
-vim.keymap.set('n', 'Y', 'y$')
-```
+## 🔌 Plugin Configuration
 
-We can press space twice to switch between the last two used buffers.
-```
-vim.keymap.set('n', '<leader><leader>', '<C-^>')
-```
-However, this behaiour should also be used in combination with `Harpoon`
+### Harpoon - Quick File Navigation
+| Key | Action |
+|-----|--------|
+| `<leader>a` | Add file to Harpoon |
+| `<C-h>` `<C-t>` `<C-n>` `<C-s>` | Navigate marked files |
+| `<C-e>` | Open Harpoon quick menu |
 
-## Fuzzy finding files
-We can search for processes and then fuzzy find them using `fzf` and `ps`.
-```
-ps aux | fzf
-```
+### Vim-Surround - Edit Surrounding Characters
+| Command | Action |
+|---------|--------|
+| `cs"'` | Change `"` to `'` |
+| `cs({` | Change `(` to `{` |
+| `ds'` | Delete surrounding `'` |
+| `ysiw]` | Surround word with `[]` |
+| `yss"` | Surround line with `""` |
 
-Within `nvim` we use `telescope` to fuzzy find files.
-```
-<leader>pf # Fuzzy find files in the current directory
-<leader>gf # Fuzzy find git tracked files
-```
+### Undotree - Visualize Undo History
+| Key | Action |
+|-----|--------|
+| `<leader>u` | Toggle undo tree |
 
-### Get Specific Help
+### LSP Features
+| Key | Action |
+|-----|--------|
+| `gd` | Go to definition |
+| `gD` | Go to declaration |
+| `gi` | Go to implementation |
+| `go` | Go to type definition |
+| `gr` | List references |
+| `K` | Show documentation |
+| `gs` | Show signature help |
+| `<F2>` | Rename symbol |
+| `<F3>` | Format buffer |
+| `gl` | Show diagnostics |
+| `[d` `]d` | Navigate diagnostics |
 
-Description          | Prepend   | Example           |
--------------------- | --------- | ----------------- |
-Normal mode command  | (nothing) | :help x           |
-Visual mode command  | v_        | :help v_u         |
-Insert mode command  | i_        | :help i_META      |
-Command-line command | :         | :help :quit       |
-Option               | '         | :help 'textwidth' |
-Command-line editing | c         | :help c_\<BS>     |
-Vim command argument | -         | :help -r          |
-Search flags         | /         | :help /\U         |
-Substitution flags   | s/        | :help s/\\&       |
+### Auto-completion (nvim-cmp)
+| Key | Action |
+|-----|--------|
+| `<C-y>` | Accept completion |
+| `<C-e>` | Cancel completion |
+| `<Up>` `<Down>` | Navigate completions |
 
-## Plugins
-Plugins are managed with `packer.nvim`.
-Ensure that the file is sourced with `:so` and then run `:PackerSync` to install any new plugins.
+### GitHub Copilot
+| Key | Action |
+|-----|--------|
+| `<C-y>` | Accept suggestion |
+| `<C-]>` | Dismiss suggestion |
+| `<M-[>` `<M-]>` | Cycle suggestions |
+| `<M-Right>` | Accept next word |
+| `<M-C-Right>` | Accept next line |
 
-### [Harpoon](https://github.com/ThePrimeagen/harpoon/tree/harpoon2)
+## 🖥️ Tmux Configuration
 
-Harpoon is a plugin that allows us to quickly navigate between frequently used files. To use it, we first need to mark files with `Harpoon` and then we can navigate between them.
-Add the current file to `Harpoon` with:
-```
-<leader>a
-```
-Then we can navigate between the marked files in the following order:
-```
-<C-h>
-<C-t>
-<C-n>
-<C-s>
-```
-We can also open a quick menu to see all marked files with:
-```
-<C-e>
-```
+### Key Settings
+- **Prefix key:** `Ctrl-a` (instead of default `Ctrl-b`)
+- **Escape time:** Instant key registration
+- **New windows:** Open in current path
+- **Auto-renumber:** Windows renumber after closing
+- **History:** 10,000 line scrollback buffer
 
-### [Vim-Surround](https://github.com/tpope/vim-surround)
-This plugin is used to easily change surrounding characters such as parentheses, brackets, quotes, etc.
-Uses `cs` as the command to change surrounding characters in normal mode.
-```
-cs"'  # Change surrounding double quotes to single quotes
-cs({  # Change surrounding parentheses to curly braces
-ds'   # Delete surrounding single quote
-ysiw] # Surround the current word with square brackets
-yss"  # Surround the entire current line with double quotes
-```
+### Basic Commands
+```bash
+# Sessions
+tmux new -s session_name    # Create named session
+tmux attach -t session_name # Attach to session
+tmux list-sessions         # List sessions
 
-### [Undotree](https://github.com/mbbill/undotree)
-This plugin is used to visualize the undo history of a file.
-Toggle the undo tree with:
-```
-<leader>u
-```
-
-### [LSP-Zero](https://github.com/VonHeikemen/lsp-zero.nvim/tree/v2.x?tab=readme-ov-file)
-> Note: Version 2.x is used in this configuration but version 3.x is also available.
-
-This plugin is used to easily set up LSP, autocompletion and snippets.
-To install the necessary LSP servers, run:
-```
-:LspInstall {SERVER_NAME}
+# Windows & Panes
+Ctrl-a c                   # New window
+Ctrl-a %                   # Split vertically
+Ctrl-a "                   # Split horizontally
+Ctrl-a [0-9]              # Switch to window number
 ```
 
-We use Mason to manage LSP servers, DAP servers, linters and formatters.
-We also use the following keymaps for LSP functionality:
-```
-gd      # Go to definition
-gD      # Go to declaration
-gi      # Go to implementation
-go      # Go to type definition
-gr      # List all references
-K       # Show hover documentation
-gs     # Show signature help
-<F2>    # Renames all references to the symbol under the cursor
-<F3>    # Format the current buffer
-gl     # Show diagnostics in a floating window
-[ d     # Go to the previous diagnostic
-] d     # Go to the next diagnostic
+## 📚 Getting Help
+
+### Vim Help System
+| Type | Prefix | Example |
+|------|---------|---------|
+| Normal mode | (none) | `:help x` |
+| Visual mode | `v_` | `:help v_u` |
+| Insert mode | `i_` | `:help i_META` |
+| Command-line | `:` | `:help :quit` |
+| Options | `'` | `:help 'textwidth'` |
+
+### LSP Management
+```vim
+:LspInstall {server}   " Install LSP server
+:Mason                 " Open Mason package manager
+:Copilot               " Copilot commands
 ```
 
-Additionally, `lsp-zero` provides auto-completion functionality with `nvim-cmp`.
-```
-<Ctrl-y>  # Confirm the currently selected completion item
-<Ctrl-e>  # Cancel completion
-<Down>    # Select the next completion item
-<Up>      # Select the previous completion item
-```
+## Plugin Management
 
-### [Copilot](https://github.com/github/copilot.vim)
-This plugin is used to provide AI-powered code completions. But, it tends to conflict with the LSP auto-completion so we can remap the accept suggestion key to `<C-y>`.
-Additional maps:
-```
-<C-]>  # Dismiss the suggestion
-<M-[>  # Cycle to the previous suggestion
-<M-]>  # Cycle to the next suggestion
-<M-Right> # Accept the next word of the suggestion
-<M-C-Right> # Accept the next line of the suggestion
-```
-> Note: `M` refers to the `Alt` key.
+Plugins are managed with Packer. After making changes:
+1. Source the config: `:so`
+2. Sync plugins: `:PackerSync`
 
-Use `:Copilot` for additional commands.
+## External Tools
 
-# `tmux`
-We set our prefix key to `Ctrl-a` instead of the default `Ctrl-b`.
-```
-set -g prefix C-a
-unbind C-b
-bind C-a send-prefix
-```
-
-We can key register instantly with:
-```
-set -s escape-time 0
-```
-
-By default, tmux opens a new tmux session in the directory where it was started. To change this behaviour to always open in the home directory, we can set:
-```
-bind c new-window -c "#{pane_current_path}"
-```
-
-Renumber windows sequentially after closing one:
-```
-set -g renumber-windows on
-```
-
-Increase scrollback buffer size:
-```
-set -g history-limit 10000
+### Fuzzy Finding with FZF
+```bash
+ps aux | fzf          # Search processes with fuzzy finding
 ```
