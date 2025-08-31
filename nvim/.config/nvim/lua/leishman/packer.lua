@@ -33,7 +33,7 @@ return require('packer').startup(function(use)
         end
     }
     use('nvim-treesitter/playground')
-    use('ThePrimeagen/harpoon')
+    use{'ThePrimeagen/harpoon', branch="harpoon2", requires = { 'nvim-lua/plenary.nvim' }}
     use('mbbill/undotree')
     use('tpope/vim-fugitive')
     use('williamboman/mason.nvim')
@@ -62,4 +62,7 @@ return require('packer').startup(function(use)
         end,
     })
     use('mfussenegger/nvim-lint')
+    use('mfussenegger/nvim-dap')
+    use('mfussenegger/nvim-dap-python')
+    use{'kawre/leetcode.nvim', requires={"MunifTanjim/nui.nvim"}}
 end)
