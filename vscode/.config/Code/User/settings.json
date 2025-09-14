@@ -1,0 +1,215 @@
+{
+  "cmake.configureOnOpen": false,
+  "settingsSync.ignoredSettings": [
+    "latex-workshop.latex.tools"
+  ],
+  "pddlParser.executableOrService": "c:\\Users\\leish\\AppData\\Roaming\\Code\\User\\globalStorage\\jan-dolejsi.pddl\\val\\Val-20210401.1-win64\\bin\\Parser.exe",
+  "pddl.validatorPath": "c:\\Users\\leish\\AppData\\Roaming\\Code\\User\\globalStorage\\jan-dolejsi.pddl\\val\\Val-20210401.1-win64\\bin\\Validate.exe",
+  "pddl.valueSeqPath": "c:\\Users\\leish\\AppData\\Roaming\\Code\\User\\globalStorage\\jan-dolejsi.pddl\\val\\Val-20210401.1-win64\\bin\\ValueSeq.exe",
+  "pddl.valStepPath": "c:\\Users\\leish\\AppData\\Roaming\\Code\\User\\globalStorage\\jan-dolejsi.pddl\\val\\Val-20210401.1-win64\\bin\\ValStep.exe",
+  "pddl.selectedPlanner": "http://solver.planning.domains/solve",
+  "pddl.planners": [
+    {
+      "kind": "COMMAND",
+      "path": "./Metric-FF-v2.1/ff",
+      "syntax": "$(planner) $(options) -o $(domain) -f $(problem)",
+      "title": "ff",
+      "canConfigure": true
+    }
+  ],
+  "latex-workshop.view.pdf.viewer": "external",
+  "editor.suggestSelection": "first",
+  "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "workbench.editorAssociations": {
+    "*.npz": "default",
+    "*.tga": "default"
+  },
+  "workbench.iconTheme": "file-icons",
+  "svelte.plugin.svelte.note-new-transformation": false,
+  "svelte.enable-ts-plugin": true,
+  "files.eol": "\n",
+  "[dart]": {
+    "editor.formatOnSave": true,
+    "editor.formatOnType": true,
+    "editor.rulers": [
+      80
+    ],
+    "editor.selectionHighlight": false,
+    "editor.suggest.snippetsPreventQuickSuggestions": false,
+    "editor.suggestSelection": "first",
+    "editor.tabCompletion": "onlySnippets",
+    "editor.wordBasedSuggestions": "off"
+  },
+  "dart.flutterRunAdditionalArgs": [
+    "--no-sound-null-safety"
+  ],
+  "kotlin.languageServer.enabled": false,
+  "kotlin.debugAdapter.enabled": false,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "editor.tabSize": 2,
+  "terminal.integrated.defaultProfile.windows": "Command Prompt",
+  "editor.accessibilitySupport": "off",
+  "editor.fontFamily": "'Fira Code'",
+  "terminal.integrated.fontFamily": "'Fira Code'",
+  "editor.fontLigatures": true,
+  "[cpp]": {
+    "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd"
+  },
+  "files.watcherExclude": {
+    "**/.bloop": true,
+    "**/.metals": true,
+    "**/.ammonite": true
+  },
+  "[scala]": {
+    "editor.defaultFormatter": "scalameta.metals"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  "workbench.sideBar.location": "right",
+  "remote.autoForwardPortsSource": "hybrid",
+  "workbench.colorTheme": "Catppuccin Mocha",
+  "vim.cursorStylePerMode.insert": "line",
+  "remote.SSH.remotePlatform": {
+    "pop-os.tail6567e0.ts.net": "linux"
+  },
+  "window.commandCenter": false,
+  "workbench.layoutControl.enabled": false,
+  "editor.minimap.enabled": false,
+  "terminal.integrated.defaultProfile.linux": "zsh",
+  "github.copilot.nextEditSuggestions.enabled": true,
+  "zenMode.hideLineNumbers": false,
+  "zenMode.fullScreen": false,
+  "zenMode.hideStatusBar": false,
+  "zenMode.restore": true,
+  "editor.lineNumbers": "relative",
+  "vim.leader": "<Space>",
+  "vim.normalModeKeyBindingsNonRecursive": [
+    {
+      "before": [
+        "leader",
+        "p",
+        "v"
+      ],
+      "commands": [
+        "workbench.action.toggleSidebarVisibility",
+        "workbench.view.explorer",
+        "workbench.action.showFilesExplorer",
+        "workbench.action.focusFilesExplorer"
+      ],
+      "when": "!sideBarVisible && !sideBarFocus"
+    },
+    {
+      "before": [
+        "leader",
+        "p",
+        "v"
+      ],
+      "commands": [
+        "workbench.view.explorer",
+        "workbench.action.showFilesExplorer",
+        "workbench.action.focusFilesExplorer"
+      ],
+      "when": "sideBarVisible && !sideBarFocus"
+    },
+    {
+      "before": [
+        "leader",
+        "g",
+        "f"
+      ],
+      "commands": [
+        "workbench.action.quickOpen"
+      ],
+    },
+    {
+      "before": [
+        "leader",
+        "p",
+        "s"
+      ],
+      "commands": [
+        "workbench.action.findInFiles"
+      ],
+    },
+    {
+      "before": [
+        "ctrl+a",
+        "n"
+      ],
+      "commands": [
+        "workbench.action.nextEditor"
+      ]
+    },
+    {
+      "before": [
+        "ctrl+a",
+        "p"
+      ],
+      "commands": [
+        "workbench.action.previousEditor"
+      ]
+    },
+    {
+      "before": [
+        "ctrl+a",
+        "c"
+      ],
+      "commands": [
+        "workbench.action.files.newUntitledFile"
+      ]
+    },
+    {
+      "before": [
+        "ctrl+a",
+        "x"
+      ],
+      "commands": [
+        "workbench.action.closeActiveEditor"
+      ]
+    },
+    {
+      "key": "ctrl+a w",
+      "command": "workbench.action.showAllEditors"
+    },
+    {
+      "key": "ctrl+a d",
+      "command": "workbench.action.closeWindow"
+    },
+    {
+      "key": "ctrl+a %",
+      "command": "workbench.action.splitEditor"
+    },
+    {
+      "key": "ctrl+a \"",
+      "command": "workbench.action.splitEditorDown"
+    }
+  ],
+  "terminal.integrated.commandsToSkipShell": [
+    "workbench.action.focusActiveEditorGroup"
+  ],
+  "terminal.integrated.sendKeybindingsToShell": false,
+  "terminal.integrated.showOnStartup": "always",
+  "workbench.startupEditor": "terminal",
+  "workbench.editor.enablePreview": true,
+  "workbench.editor.enablePreviewFromQuickOpen": true,
+  "workbench.editor.revealIfOpen": true,
+  "workbench.quickOpen.closeOnFocusLost": false,
+  "workbench.editor.enablePreviewFromCodeNavigation": true,
+  "workbench.editor.openPositioning": "last",
+  "workbench.editor.restoreViewState": true,
+  "workbench.quickOpen.preserveInput": false,
+  "workbench.editor.limit.enabled": true,
+  "workbench.editor.limit.value": 10,
+  "workbench.editor.limit.excludeDirty": false,
+  "workbench.list.openMode": "singleClick",
+  "zenMode.centerLayout": false
+}

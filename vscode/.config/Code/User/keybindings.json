@@ -1,0 +1,110 @@
+// Place your key bindings in this file to override the defaults
+[
+    {
+        "key": "ctrl+shift+t y",
+        "command": "workbench.action.quickOpenNavigateNextInFilePicker",
+        "when": "inFilesPicker && inQuickOpen"
+    },
+    {
+        "key": "ctrl+p",
+        "command": "-workbench.action.quickOpenNavigateNextInFilePicker",
+        "when": "inFilesPicker && inQuickOpen"
+    },
+    {
+        "key": "ctrl+shift+q",
+        "command": "workbench.action.quickOpen"
+    },
+    {
+        "key": "ctrl+p",
+        "command": "workbench.action.quickOpen"
+    },
+    // FILE TREE
+    {
+        "command": "workbench.action.toggleSidebarVisibility",
+        "key": "ctrl+e"
+    },
+    {
+        "key": "ctrl-q",
+        "command": "runCommands",
+        "args": {
+            "commands": [
+                "workbench.action.focusActiveEditorGroup",
+                "workbench.action.closeSidebar"
+            ],
+        },
+        "when": "filesExplorerFocus"
+    },
+    {
+        "key": "ctrl-q",
+        "command": "runCommands",
+        "args": {
+            "commands": [
+                "workbench.action.focusActiveEditorGroup",
+                "workbench.action.closeSidebar"
+            ],
+        },
+        "when": "searchInputBoxFocus"
+    },
+    {
+        "key": "ctrl-q",
+        "command": "runCommands",
+        "args": {
+            "commands": [
+                "workbench.action.focusActiveEditorGroup",
+                "workbench.action.closeSidebar"
+            ],
+        },
+        "when": "searchViewletFocus"
+    },
+    {
+        "key": "n",
+        "command": "explorer.newFile",
+        "when": "filesExplorerFocus && !inputFocus"
+    },
+    {
+        "command": "renameFile",
+        "key": "r",
+        "when": "filesExplorerFocus && !inputFocus"
+    },
+    {
+        "key": "shift+n",
+        "command": "explorer.newFolder",
+        "when": "explorerViewletFocus"
+    },
+    {
+        "command": "deleteFile",
+        "key": "d",
+        "when": "filesExplorerFocus && !inputFocus"
+    },
+    {
+        "key": "ctrl+;",
+        "command": "workbench.action.terminal.focus",
+        "when": "!terminalFocus"
+    },
+    {
+        "key": "ctrl+;",
+        "command": "workbench.action.focusLastEditorGroup",
+        "when": "terminalFocus"
+    },
+    {
+        "key": "ctrl+1",
+        "command": "workbench.action.showCommands",
+        "when": "terminalFocus"
+    },
+    {
+        "key": "ctrl+l",
+        "command": "search.action.focusSearchList",
+        "when": "searchViewletFocus && searchInputBoxFocus"
+    },
+    {
+        "key": "ctrl-l",
+        // "command": "search.action.focusQueryEditorWidget",
+        "command": "workbench.action.showCommands",
+        "when": "searchViewLetFocus && !searchInputBoxFocus"
+    },
+    {
+        "key": "ctrl+space",
+        "command": "workbench.action.quickOpenNavigateNext",
+        "when": "inQuickOpen"
+    }
+]

@@ -14,3 +14,5 @@ export PATH="$PATH:/home/seanleishman/.local/share/coursier/bin"
 # <<< coursier install directory <<<
 
 export PATH=$PATH:~/Packages/zig-linux-x86_64-0.15.0-dev.345+ec2888858
+
+export PATH=$PATH:/usr/local/go/bin
