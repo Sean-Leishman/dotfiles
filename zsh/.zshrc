@@ -127,7 +127,7 @@ unset __conda_setup
 source ~/.profile
 alias icat="kitten icat"
 
-eval "$(oh-my-posh init zsh --config ~/.config/oh-my-posh/emodipt-extend.omp.json)"
+eval "$(oh-my-posh init zsh --config ~/.config/oh-my-posh/stelbent.minimal.time.json)"
 eval "$(zoxide init zsh)"
 
 POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(anaconda ...ENVS)
