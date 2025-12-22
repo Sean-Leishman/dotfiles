@@ -1,27 +1,40 @@
 return {
 	{
 		"nvim-treesitter/nvim-treesitter",
-		config = function()
-			require("nvim-treesitter.configs").setup({
-				ensure_installed = {
-					"cpp",
-					"javascript",
-					"typescript",
-					"python",
-					"c",
-					"lua",
-					"vim",
-					"vimdoc",
-					"query",
-					"html",
-				},
-				sync_install = false,
-				auto_install = false,
-				highlight = {
-					enable = true,
-					additional_vim_regex_highlighting = false,
-				},
-			})
-		end,
+		build = ":TSUpdate",
+		event = { "BufReadPost", "BufNewFile" }, -- Load on buffer read/new
+		cmd = { "TSInstall", "TSBufEnable", "TSBufDisable", "TSModuleInfo" },
+		opts = {
+			-- LazyVim config for treesitter
+			indent = { enable = true }, ---@type lazyvim.TSFeat
+			highlight = { enable = true }, ---@type lazyvim.TSFeat
+			folds = { enable = true }, ---@type lazyvim.TSFeat
+			ensure_installed = {
+				"bash",
+				"c",
+				"diff",
+				"html",
+				"javascript",
+				"jsdoc",
+				"json",
+				"jsonc",
+				"lua",
+				"luadoc",
+				"luap",
+				"markdown",
+				"markdown_inline",
+				"printf",
+				"python",
+				"query",
+				"regex",
+				"toml",
+				"tsx",
+				"typescript",
+				"vim",
+				"vimdoc",
+				"xml",
+				"yaml",
+			},
+		},
 	},
 }
