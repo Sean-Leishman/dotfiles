@@ -136,3 +136,5 @@ unset __conda_setup
 
 eval "$(zoxide init bash)"
 
+
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash

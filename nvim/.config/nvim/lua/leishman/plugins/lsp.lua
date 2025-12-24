@@ -20,7 +20,7 @@ return {
 				})
 			end
 			require("mason-lspconfig").setup({
-				ensure_installed = { "clangd", "pyright" },
+				ensure_installed = { "clangd", "pyright", "rust_analyzer" },
 				automatic_installation = true,
 				handlers = {
 					default_setup,
@@ -39,6 +39,8 @@ return {
 						vim.cmd("LspStart pyright")
 					elseif ft == "c" or ft == "cpp" or ft == "cc" or ft == "h" or ft == "hpp" then
 						vim.cmd("LspStart clangd")
+					elseif ft == "rs" then
+						vim.cmd("LspStart rust_analyzer")
 					end
 				end,
 			})
@@ -57,7 +59,7 @@ return {
 		},
 		config = function()
 			local cmp = require("cmp")
-			local luasnip = require("cmp_luasnip")
+			local luasnip = require("luasnip")
 			local lspkind = require("lspkind")
 			require("luasnip.loaders.from_vscode").lazy_load()
 
@@ -117,6 +119,7 @@ return {
 
 			vim.lsp.config("clangd", { cmd = { "--background-index", "--offset-encoding=utf-8", "--clang-tidy" } })
 			vim.lsp.config("clang-format", {})
+			vim.lsp.config("rust_analyzer", {})
 			vim.lsp.config("pyright", {
 				on_attach = on_attach,
 				settings = {

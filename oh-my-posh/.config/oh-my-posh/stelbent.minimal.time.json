@@ -39,9 +39,13 @@
           "type": "session"
         },
         {
+          "properties": {
+            "cache_duration": "none",
+            "style": "agnoster_full"
+          },
           "foreground": "#91ddff",
           "style": "plain",
-          "template": "{{ .Path }}",
+          "template": "{{ .Path }} ",
           "type": "path"
         },
         {
