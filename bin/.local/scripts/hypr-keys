@@ -1,0 +1,103 @@
+#!/usr/bin/env python3
+"""Searchable Hyprland keybind cheatsheet.
+
+Parses ~/.config/hypr/hyprland.lua (the single source of truth) for every
+hl.bind(...) and shows "KEYS  —  description" in rofi (or wofi) -dmenu.
+Description = the line's trailing `-- comment` if present, else derived from
+the dispatcher. Display-only.
+"""
+import os, re, shutil, subprocess, sys
+
+CFG = os.path.expanduser("~/.config/hypr/hyprland.lua")
+
+
+def norm_keys(expr: str) -> str:
+    s = expr.replace("mainMod", "SUPER")
+    s = s.replace("..", " ").replace('"', "")
+    s = re.sub(r"\bkey\b", "[1-0]", s)          # the workspace for-loop variable
+    s = re.sub(r"\s+", " ", s).strip()
+    return s.replace("+", " + ").replace("  ", " ").replace(" + ", " + ")
+
+
+def _ws(val: str) -> str:
+    v = val.strip('"')
+    return {"e+1": "next", "e-1": "previous", "i": "", "key": ""}.get(v, v)
+
+
+def describe(rest: str, comment: str) -> str:
+    if comment:
+        return comment.strip()
+    m = re.search(r'exec_cmd\("([^"]+)"\)', rest)
+    if m:
+        return m.group(1)
+    m = re.search(r"exec_cmd\((\w+)\)", rest)
+    if m:
+        return f"launch {m.group(1)}"
+
+    # Read the dispatcher + its arguments so focus/move/etc. self-describe.
+    disp = re.search(r"hl\.dsp\.([\w.]+)", rest)
+    name = disp.group(1) if disp else ""
+    direction = re.search(r'direction\s*=\s*"(\w+)"', rest)
+    workspace = re.search(r'workspace\s*=\s*("?[\w+\-:]+"?)', rest)
+
+    if "window.move" in name:
+        if direction:
+            return f"move window {direction.group(1)}"
+        if workspace:
+            return f"move window to workspace {_ws(workspace.group(1))}".strip()
+    if "window.resize" in name:
+        return "resize window"
+    if "window.close" in name:
+        return "close window"
+    if "window.fullscreen" in name:
+        return "fullscreen"
+    if name.endswith("focus") or "focus" in name:
+        if direction:
+            return f"focus {direction.group(1)}"
+        if workspace:
+            w = _ws(workspace.group(1))
+            return f"{w} workspace".strip() if w in ("next", "previous") else "switch to workspace"
+    if name:
+        return name.replace(".", " ").replace("_", " ")
+    return rest.strip()
+
+
+def main() -> int:
+    if not os.path.exists(CFG):
+        print(f"config not found: {CFG}", file=sys.stderr)
+        return 1
+
+    rows, seen = [], set()
+    for raw in open(CFG):
+        m = re.search(r"hl\.bind\(\s*(.+?),\s*(hl\.dsp.*)$", raw)
+        if not m:
+            continue
+        keys = norm_keys(m.group(1))
+        rest = m.group(2)
+        # Detect the trailing `-- comment` on a copy with quoted strings blanked,
+        # so `--` inside a command (e.g. `wofi --dmenu`) isn't mistaken for it.
+        rest_nostr = re.sub(r'"[^"]*"', '""', rest)
+        cm = re.search(r"--\s*(.*)$", rest_nostr)
+        desc = describe(rest, cm.group(1) if cm else "")
+        line = f"{keys:<26}  {desc}"
+        if line not in seen:
+            seen.add(line)
+            rows.append(line)
+
+    text = "\n".join(rows)
+    if shutil.which("rofi"):
+        # Dedicated dark theme with explicit hex (rofi 2.0.0 ignores @var refs)
+        # + wide window + monospace so the two columns line up.
+        theme = os.path.expanduser("~/.config/rofi/cheatsheet.rasi")
+        cmd = ["rofi", "-dmenu", "-i", "-no-show-icons", "-p", "Keybinds", "-theme", theme]
+    elif shutil.which("wofi"):
+        cmd = ["wofi", "--dmenu", "--prompt", "Keybinds", "--width", "60%", "--lines", "20"]
+    else:
+        print(text)
+        return 0
+    subprocess.run(cmd, input=text, text=True)
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

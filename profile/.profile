@@ -2,7 +2,7 @@ export XDG_CONFIG_HOME=$HOME/.config
 
 # User specific environment and startup programs
 
-PATH=$PATH:$HOME/.local/bin:$HOME/bin
+PATH=$PATH:$HOME/.local/bin:$HOME/bin:$HOME/.local/scripts
 
 export PATH
 

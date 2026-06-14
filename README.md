@@ -1,11 +1,13 @@
 # .dotfiles
 
-A comprehensive dotfile configuration for Linux systems featuring Neovim, Tmux, and Zsh with Oh My Zsh. Uses GNU Stow for automatic symlinking.
+A comprehensive dotfile configuration for Linux featuring a Hyprland Wayland desktop (waybar, kitty, wofi), Neovim, Tmux, and Zsh with Oh My Zsh. Uses GNU Stow for symlinking and a one-shot, distro-aware installer that also pulls in every system package.
 
 ## Table of Contents
 
 - [Prerequisites](#-prerequisites)
 - [Quick Start](#-quick-start)
+  - [Installer layout](#installer-layout)
+- [Desktop (Hyprland)](#desktop-hyprland)
 - [Setup Instructions](#-setup-instructions)
   - [Neovim](#neovim)
   - [Oh My Zsh](#oh-my-zsh)
@@ -35,41 +37,89 @@ A comprehensive dotfile configuration for Linux systems featuring Neovim, Tmux, 
 
 ## Prerequisites
 
-- [GNU Stow](https://www.gnu.org/software/stow/) - for managing dotfile symlinks
-- Git
-- Curl
+Just `git` and a supported distro. The installer bootstraps everything else
+(GNU Stow, zsh, neovim, tmux, the Hyprland desktop stack, fonts, oh-my-zsh,
+oh-my-posh) through your package manager.
+
+Supported distros: **Fedora** (dnf — fully verified) and **Debian/Ubuntu**
+(apt — best-effort; the Hyprland ecosystem needs a recent release, see
+`packages/debian.txt`).
 
 ## Quick Start
 
 ```bash
-cd .dotfiles
-chmod +x ./install.sh
+git clone --recursive https://github.com/Sean-Leishman/dotfiles.git
+cd dotfiles
 ./install.sh
 ```
 
+> The Neovim config is a git **submodule** ([Sean-Leishman/nvim](https://github.com/Sean-Leishman/nvim)),
+> so clone with `--recursive`. Already cloned without it? Run
+> `git submodule update --init --recursive` (the installer also does this for you).
+
+That single command, on a fresh machine:
+
+1. Detects your distro and installs everything in `packages/<distro>.txt`.
+2. Refreshes the font cache (waybar's Nerd Font icons).
+3. Installs oh-my-zsh + zsh plugins + oh-my-posh (skipped if already present).
+4. Backs up any pre-existing **real** dotfiles to `~/.dotfiles-backup-<timestamp>/`,
+   then symlinks every package into `$HOME` with GNU Stow.
+
+It is **idempotent** — safe to re-run. Afterwards:
+`chsh -s "$(command -v zsh)"`, log out, and pick the **Hyprland** session (or
+run `Hyprland` from a TTY).
+
+### Installer layout
+
+| Path | Purpose |
+|------|---------|
+| `install.sh` | one-shot bootstrap: distro-detect → packages → fonts → shells → stow |
+| `packages/fedora.txt` | dnf package list (verified on Fedora 44) |
+| `packages/debian.txt` | apt package list (best-effort) |
+| `<pkg>/` | a GNU Stow package whose tree mirrors `$HOME` |
+
+Stow only a subset by overriding the package list (comma-separated):
+
+```bash
+STOW_FOLDERS=bash,hypr,waybar ./install.sh
+```
+
+Personal scripts: drop executables in `bin/.local/scripts/` — once `bin` is
+stowed they land on `$PATH` via `~/.local/scripts`.
+
+## Desktop (Hyprland)
+
+A Wayland desktop on Hyprland, using the new **Lua** config format
+(`hypr/.config/hypr/hyprland.lua`):
+
+- **Compositor:** Hyprland · hyprpaper (wallpaper) · hyprpolkitagent · xdg-desktop-portal-hyprland
+- **Bar:** waybar — *Embark* theme, *Cascadia Code NF* font, verified Nerd Font icons (`waybar/.config/waybar/`)
+- **Launcher / terminal / files:** wofi · kitty · Thunar
+- **Notifications:** dunst
+
+**No-nest launch wrapper:** `bash/.bash_profile` defines a `Hyprland()`
+function that starts the compositor with a deliberately invalid
+`WAYLAND_DISPLAY`. When another compositor (e.g. GNOME) is running on another
+VT, this makes Hyprland's nested-backend probe fail so it comes up DRM-only on
+the real panel instead of also rendering a phantom output into the other
+session. Hyprland then exports its own `WAYLAND_DISPLAY` for child apps.
+
 ## Setup Instructions
+
+`./install.sh` handles the steps below automatically. They're documented here
+for reference / manual setup.
 
 ### Neovim
 
-1. **Install the latest Neovim:**
-   ```bash
-   curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
-   chmod u+x nvim.appimage
-   sudo ln -s ./nvim.appimage /usr/local/bin/nvim
-   ```
-
-2. **Install Packer (plugin manager):**
-   ```bash
-   git clone --depth 1 https://github.com/wbthomason/packer.nvim \
-     ~/.local/share/nvim/site/pack/packer/start/packer.nvim
-   ```
-
-3. **Sync plugins in Neovim:**
-   ```
-   :PackerSync
-   ```
+Neovim is installed by the package step, and its config is the
+[Sean-Leishman/nvim](https://github.com/Sean-Leishman/nvim) submodule (lazy.nvim,
+pinned via `lazy-lock.json`). Plugins install themselves on first launch — just
+open `nvim`. To work on the config, edit inside `nvim/.config/nvim/` (it's a
+submodule, so commit/push there, then bump the pointer in this repo).
 
 ### Oh My Zsh
+
+Installed automatically (idempotently) by `install.sh`. Manual equivalent:
 
 ```bash
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"

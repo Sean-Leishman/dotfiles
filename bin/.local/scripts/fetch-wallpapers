@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+# Download the curated wallpaper set into ~/Pictures/wallpapers.
+# Wallpapers aren't committed to the dotfiles repo (binary bloat); this script
+# repopulates them on a new machine. waypaper (Super+W) browses this folder.
+# Source: https://github.com/D3Ext/aesthetic-wallpapers
+set -euo pipefail
+
+DEST="${1:-$HOME/Pictures/wallpapers}"
+BASE="https://raw.githubusercontent.com/D3Ext/aesthetic-wallpapers/main/images"
+FILES=(
+  4k-ai-mountain.jpg
+  abstract.jpg
+  android-dark-lines.jpg
+  anime-eye-nord.png
+  anime-nord.png
+  arch-nord-dark.png
+  arch_purple.png
+  astronaut-nord.png
+  aurora_v02.png
+  black.jpg
+  black-panther.jpg
+  blue_demon.png
+  blue-red-4k.png
+  blue-waves.png
+  catppuccin-rainbow-arch.png
+  color-waves.png
+  cute-town-dark.png
+  cyberpunk_car.png
+  dark_forest.png
+  dark_pixelart.png
+  dark_samurai_mobile.jpg
+  dark_skulls.png
+  deer-forest.jpg
+  deer-red-moon.png
+  Doodle_Space_Nord.png
+  estrategy-minimal.png
+  everforest_one_piece.png
+  everforest_robin.png
+  fishing_stars.jpg
+  forest-bridge.jpg
+  forest.png
+  golden-mountains.png
+  gradient-pb.png
+  gruvbox_forest-4.png
+  Trex-moon.jpg
+)
+
+mkdir -p "$DEST"
+for f in "${FILES[@]}"; do
+  if [ -s "$DEST/$f" ]; then
+    echo "have   $f"
+  elif curl -fsSL "$BASE/$f" -o "$DEST/$f" && [ -s "$DEST/$f" ]; then
+    echo "got    $f"
+  else
+    echo "FAILED $f" >&2; rm -f "$DEST/$f"
+  fi
+done
+echo "Wallpapers in $DEST — open waypaper (Super+W) to pick one."

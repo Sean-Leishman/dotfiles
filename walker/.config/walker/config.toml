@@ -1,0 +1,22 @@
+# Walker launcher config.
+#
+# Written WITHOUT walker installed yet — walker's config schema is
+# version-specific, so this file intentionally keeps to (near-)defaults so
+# walker is guaranteed to launch. After you install it via the Copr:
+#
+#     sudo dnf copr enable errornointernet/walker
+#     sudo dnf install walker
+#     walker --version
+#
+# ...tell me the version and I'll wire in the Embark theme (embark.css in this
+# dir) using the theming mechanism that matches your build. Docs:
+# https://github.com/abenz1267/walker
+#
+# If walker ever fails to start, delete this file — walker runs fine on its
+# built-in defaults.
+
+[search]
+placeholder = "Search…"
+
+[list]
+max_entries = 8

@@ -1,0 +1,3 @@
+
+# TPM manages tmux plugins at ~/.tmux/plugins at runtime; never track them
+tmux/.config/tmux/plugins/

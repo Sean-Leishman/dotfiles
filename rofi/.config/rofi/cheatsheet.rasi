@@ -1,0 +1,61 @@
+/* Rofi cheatsheet theme — Embark, explicit hex (rofi 2.0.0 dropped @var refs).
+   Wide + many rows + monospace so the two columns align and stay readable. */
+
+/* (icons are disabled via `-no-show-icons` on the command line, not here, so
+    this stays a pure theme and its colors resolve correctly.) */
+
+* {
+    font: "Cascadia Code NF 13";
+}
+
+window {
+    width:            58%;
+    background-color: #1e1c31;
+    border:           2px;
+    border-color:     #63f2f1;
+    border-radius:    12px;
+    padding:          14px;
+}
+
+mainbox {
+    background-color: #1e1c31;
+    spacing:          10px;
+    children:         [ inputbar, listview ];
+}
+
+inputbar {
+    background-color: #2d2b40;
+    text-color:       #cbe3e7;
+    border-radius:    8px;
+    padding:          10px 12px;
+    spacing:          8px;
+    children:         [ prompt, entry ];
+}
+
+prompt { background-color: #2d2b40; text-color: #63f2f1; }
+entry  { background-color: #2d2b40; text-color: #cbe3e7; placeholder: "Search…"; placeholder-color: #585273; }
+
+listview {
+    lines:            20;
+    background-color: #1e1c31;
+    scrollbar:        false;
+    spacing:          2px;
+}
+
+element {
+    background-color: #1e1c31;
+    text-color:       #cbe3e7;
+    padding:          5px 10px;
+    border-radius:    6px;
+}
+
+element selected {
+    background-color: #906cff;
+    text-color:       #1e1c31;
+}
+
+element-text {
+    background-color: inherit;
+    text-color:       inherit;
+    vertical-align:   0.5;
+}

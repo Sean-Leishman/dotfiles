@@ -1,0 +1,76 @@
+# Debian / Ubuntu package list (apt). Installed by install.sh.
+#
+# !!! BEST-EFFORT NAMES — NOT verified on a Debian/Ubuntu box. !!!
+# The Hyprland ecosystem is only packaged on RECENT releases:
+#   - Debian 13 (trixie) / Ubuntu 24.04+  have hyprland, waybar, etc. in the repos.
+#   - Older releases LACK hyprland; you'll need a newer release, backports, or to
+#     build from source. apt will error on any name not in your repos — install the
+#     rest first, then handle the missing few manually.
+# Lines marked (CHECK) are the most likely to be missing/renamed on your release.
+
+# --- Hyprland compositor + ecosystem ---
+hyprland
+hyprpaper
+hyprpolkitagent              # (CHECK) often absent on apt; build from source if missing
+hypridle                     # (CHECK) idle daemon; recent releases only
+hyprlock                     # (CHECK) lock screen; recent releases only
+xdg-desktop-portal-hyprland  # (CHECK) recent releases only
+
+# --- Bar / launchers / notifications / terminal / file manager ---
+waybar
+wofi                         # fallback launcher
+rofi                         # alternate launcher (Super+Shift+R)
+dunst
+alacritty                    # terminal (Super+Q)
+waypaper                     # wallpaper picker (Super+W); (CHECK) may be pip/AUR-only on older apt
+thunar                       # lowercase on Debian (vs Fedora's "Thunar")
+# NOTE: walker (primary launcher, Super+R) has no apt package. Install from
+# upstream releases / build from source: https://github.com/abenz1267/walker
+
+# --- Wayland utilities referenced by the Hyprland config ---
+grim
+slurp
+wl-clipboard
+brightnessctl
+playerctl
+pavucontrol
+network-manager              # provides nmtui
+
+# --- Audio stack (wpctl / pavucontrol) ---
+pipewire
+wireplumber
+pipewire-pulse               # Debian name (vs Fedora pipewire-pulseaudio)
+
+# --- Thunar settings store + thumbnails ---
+xfconf
+gvfs
+tumbler
+
+# --- Fonts ---
+fonts-font-awesome
+fonts-cascadia-code          # (CHECK) NOT the Nerd-Font-patched build; if waybar icons
+                             #   show as boxes, install "Cascadia Code NF" manually:
+                             #   https://github.com/microsoft/cascadia-code/releases
+fonts-noto-core
+
+# --- Base tooling for the dotfiles themselves ---
+stow
+git
+curl
+zsh
+tmux
+neovim
+flatpak                      # GUI apps from Flathub (see packages/flatpak.txt)
+zoxide
+fzf
+glow                         # (CHECK) markdown TUI viewer; may need charmbracelet apt repo
+
+# --- Rust toolchain + build deps for cargo TUIs (see packages/cargo.txt) ---
+rustup                       # (CHECK) else: cargo + rustc
+build-essential
+pkg-config
+libasound2-dev               # spotify_player / ncspot audio
+libssl-dev
+libdbus-1-dev
+libpulse-dev
+libncurses-dev               # ncspot

@@ -1,0 +1,68 @@
+# Alacritty — Embark theme
+# Docs: https://alacritty.org/config-alacritty.html
+
+[window]
+opacity = 0.95
+padding = { x = 8, y = 8 }
+dynamic_padding = true
+
+[scrolling]
+history = 100000      # scrollback lines kept (max allowed)
+multiplier = 3        # lines moved per scroll-wheel notch
+
+[selection]
+save_to_clipboard = true   # selected text is also copied to the clipboard
+
+[mouse]
+hide_when_typing = true
+
+# Scroll keys that work even inside full-screen TUIs (claude, less, htop…),
+# because the terminal intercepts them before the app sees them.
+[keyboard]
+bindings = [
+  { key = "PageUp",   mods = "Shift",         action = "ScrollPageUp"   },
+  { key = "PageDown", mods = "Shift",         action = "ScrollPageDown" },
+  { key = "Home",     mods = "Shift",         action = "ScrollToTop"    },
+  { key = "End",      mods = "Shift",         action = "ScrollToBottom" },
+  { key = "K",        mods = "Control|Shift", action = "ScrollLineUp"   },
+  { key = "J",        mods = "Control|Shift", action = "ScrollLineDown" },
+]
+
+[font]
+size = 11.0
+normal = { family = "Cascadia Code NF", style = "Regular" }
+bold   = { family = "Cascadia Code NF", style = "Bold" }
+italic = { family = "Cascadia Code NF", style = "Italic" }
+
+# --- Embark palette ---
+[colors.primary]
+background = "#1e1c31"
+foreground = "#cbe3e7"
+
+[colors.cursor]
+text   = "#1e1c31"
+cursor = "#63f2f1"
+
+[colors.selection]
+text       = "#cbe3e7"
+background = "#2d2b40"
+
+[colors.normal]
+black   = "#1e1c31"
+red     = "#ff5458"
+green   = "#62d196"
+yellow  = "#ffb378"
+blue    = "#65b2ff"
+magenta = "#906cff"
+cyan    = "#63f2f1"
+white   = "#a3b3cc"
+
+[colors.bright]
+black   = "#585273"
+red     = "#ff5458"
+green   = "#62d196"
+yellow  = "#ffb378"
+blue    = "#65b2ff"
+magenta = "#906cff"
+cyan    = "#63f2f1"
+white   = "#cbe3e7"

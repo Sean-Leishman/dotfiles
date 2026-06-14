@@ -1,0 +1,6 @@
+# Flatpak apps (Flathub). Installed by install.sh.
+# One app id per line; # comments and blank lines are ignored.
+
+app.zen_browser.zen    # web browser (Super+B)
+com.spotify.Client     # Spotify (media keys control it via playerctl/MPRIS)
+md.obsidian.Obsidian   # Obsidian notes

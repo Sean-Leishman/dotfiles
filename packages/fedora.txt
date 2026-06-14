@@ -1,0 +1,68 @@
+# Fedora package list (dnf). Installed by install.sh.
+# All names verified against Fedora 44 repos. One package per line; # comments and blanks ignored.
+
+# --- Hyprland compositor + ecosystem ---
+hyprland
+hyprpaper
+hyprpolkitagent
+hypridle              # idle daemon (autostart)
+hyprlock              # lock screen (Super+L)
+xdg-desktop-portal-hyprland
+
+# --- Bar / launchers / notifications / terminal / file manager ---
+waybar
+wofi                 # fallback launcher
+rofi                 # alternate launcher (Super+Shift+R)
+dunst
+alacritty            # terminal (Super+Q)
+waypaper             # wallpaper picker GUI (Super+W); sets via hyprpaper
+Thunar
+# NOTE: walker (primary launcher, Super+R) is NOT in Fedora repos — it is
+# installed from the errornointernet/walker Copr by install.sh.
+
+# --- Wayland utilities referenced by the Hyprland config ---
+grim                 # screenshots (PRINT binds)
+slurp                # region select for screenshots
+wl-clipboard         # wl-copy
+brightnessctl        # XF86MonBrightness binds
+playerctl            # XF86Audio media keys
+pavucontrol          # volume GUI (pulseaudio right-click)
+NetworkManager-tui   # nmtui (network module on-click)
+
+# --- Audio stack (wpctl / pavucontrol) ---
+pipewire
+wireplumber
+pipewire-pulseaudio
+
+# --- Thunar settings store + thumbnails (xfconf over D-Bus, gvfs, tumbler) ---
+xfconf
+gvfs
+tumbler
+
+# --- Fonts (waybar icons + nice UI font + fallbacks) ---
+cascadia-code-nf-fonts   # Cascadia Code Nerd Font (waybar font + glyphs)
+fontawesome-6-free-fonts # extra icon coverage
+google-noto-sans-fonts   # text fallback
+
+# --- Base tooling for the dotfiles themselves ---
+stow
+git
+curl
+zsh
+tmux
+neovim
+flatpak  # GUI apps from Flathub (see packages/flatpak.txt)
+zoxide   # used in .bashrc (zoxide init)
+fzf      # used in .bashrc (~/.fzf.bash)
+glow     # markdown TUI viewer (read Obsidian-vault .md files in the terminal)
+
+# --- Rust toolchain + build deps for cargo-installed TUIs (see packages/cargo.txt) ---
+rustup                 # creates ~/.cargo/env (sourced by .profile); run `rustup-init -y` after
+gcc                    # provides cc/linker — cargo needs a C toolchain to build crates
+make
+pkgconf-pkg-config     # pkg-config: lets crates locate the *-devel libs below
+alsa-lib-devel         # spotify_player / ncspot audio
+openssl-devel
+dbus-devel
+pulseaudio-libs-devel  # (NOT libpulse-devel on Fedora)
+ncurses-devel          # ncspot

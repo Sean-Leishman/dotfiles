@@ -1,0 +1,7 @@
+# Cargo crates — installed by install.sh via `cargo install <name>` into ~/.cargo/bin.
+# Requires the Rust toolchain (rustup; run `rustup-init -y` once) plus the build
+# deps listed in packages/fedora.txt / packages/debian.txt.
+# One crate per line; # comments and blank lines are ignored.
+
+spotify_player   # Spotify TUI (needs Spotify Premium for playback)
+# ncspot         # lighter Spotify TUI — uncomment to install instead of/alongside
