@@ -128,6 +128,30 @@ install_cargo_crates() {
   done < <(pkglist packages/cargo.txt)
 }
 
+# Tailscale (WireGuard mesh VPN). Uses the official installer, which adds the
+# correct repo and installs the package for every supported distro (Fedora,
+# Debian/Ubuntu, etc.), so we don't have to track repo URLs per-distro.
+# Enables the daemon but does NOT run `tailscale up` — that needs interactive
+# auth (a browser login). Set SKIP_TAILSCALE=1 to skip this step entirely.
+install_tailscale() {
+  [ -n "${SKIP_TAILSCALE:-}" ] && { log "Skipping Tailscale (SKIP_TAILSCALE set)"; return 0; }
+  if command -v tailscale >/dev/null 2>&1; then
+    log "tailscale already installed"
+  else
+    log "Installing Tailscale (official installer)"
+    curl -fsSL https://tailscale.com/install.sh | sh \
+      || { warn "tailscale install failed; skipping (see https://tailscale.com/download)"; return 0; }
+  fi
+  # Enable + start the daemon (idempotent; harmless if the installer already did).
+  if command -v systemctl >/dev/null 2>&1; then
+    sudo systemctl enable --now tailscaled >/dev/null 2>&1 \
+      || warn "could not enable tailscaled service (enable it manually)"
+  fi
+  # Hint if not yet connected to a tailnet.
+  tailscale status >/dev/null 2>&1 \
+    || warn "Tailscale installed but not connected — run:  sudo tailscale up"
+}
+
 # Bootstrap TPM (tmux plugin manager) + install the plugins from ~/.tmux.conf.
 # Plugins live at ~/.tmux/plugins (TPM's default) and are NOT tracked in the repo.
 # Run AFTER stow so ~/.tmux.conf exists for install_plugins to read.
@@ -192,6 +216,7 @@ main() {
   install_tmux_plugins
   install_flatpaks
   install_cargo_crates
+  install_tailscale
   if [ -x bin/.local/scripts/fetch-wallpapers ]; then
     log "Fetching wallpapers -> ~/Pictures/wallpapers"
     bin/.local/scripts/fetch-wallpapers || warn "wallpaper fetch failed (non-fatal)"
@@ -200,6 +225,7 @@ main() {
   echo
   echo "Next steps:"
   echo "  - Set zsh as your login shell:   chsh -s \"\$(command -v zsh)\""
+  echo "  - Connect Tailscale (one-time):   sudo tailscale up"
   echo "  - Log out, then pick the 'Hyprland' session at your display manager"
   echo "    (or from a TTY run:  Hyprland  — uses the no-nest wrapper in ~/.bash_profile)."
 }
