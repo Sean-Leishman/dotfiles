@@ -1,6 +1,9 @@
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
 
+# Let GPG/pass prompt for the passphrase in this terminal (pinentry-curses).
+export GPG_TTY=$(tty)
+
 # Path to your Oh My Zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 
@@ -77,8 +80,18 @@ source $ZSH/oh-my-zsh.sh
 source $ZSH/custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 source $ZSH/custom/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh
 
-bindkey $terminfo[kcuu1] history-substring-search-up
-bindkey $terminfo[kcud1] history-substring-search-down
+# Bind arrow keys for history-substring-search.
+# Bind the literal escape sequences (work even when $TERM has no terminfo
+# entry, e.g. TERM=alacritty without the alacritty terminfo installed):
+#   normal cursor mode -> ^[[A / ^[[B   |   application mode -> ^[OA / ^[OB
+bindkey '^[[A' history-substring-search-up
+bindkey '^[[B' history-substring-search-down
+bindkey '^[OA' history-substring-search-up
+bindkey '^[OB' history-substring-search-down
+# Also use terminfo when it's available (guarded so an empty value can't turn
+# this into a bindkey query that prints "...undefined-key" on startup):
+[[ -n "$terminfo[kcuu1]" ]] && bindkey "$terminfo[kcuu1]" history-substring-search-up
+[[ -n "$terminfo[kcud1]" ]] && bindkey "$terminfo[kcud1]" history-substring-search-down
 
 
 # User configuration
@@ -137,5 +150,19 @@ export NVM_DIR="$HOME/.config/nvm"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 eval "$(uv generate-shell-completion zsh)"
 
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-alias ls=eza
+# fzf keybindings + completion: Ctrl-R (history), Ctrl-T (files), Alt-C (cd).
+# Prefer `fzf --zsh` (fzf >= 0.48); fall back to ~/.fzf.zsh, then to the
+# scripts shipped by the Debian/Pop apt package under /usr/share/doc/fzf.
+if command -v fzf >/dev/null; then
+  if fzf --zsh >/dev/null 2>&1; then
+    source <(fzf --zsh)
+  elif [ -f ~/.fzf.zsh ]; then
+    source ~/.fzf.zsh
+  else
+    [ -f /usr/share/doc/fzf/examples/key-bindings.zsh ] && source /usr/share/doc/fzf/examples/key-bindings.zsh
+    [ -f /usr/share/doc/fzf/examples/completion.zsh ] && source /usr/share/doc/fzf/examples/completion.zsh
+  fi
+fi
+
+# Use eza as ls when available, otherwise leave the builtin ls alone.
+command -v eza >/dev/null && alias ls=eza
