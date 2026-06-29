@@ -6,6 +6,7 @@
 eza              # modern ls replacement; aliased to `ls` in zsh/.zshrc (not in apt on Pop 22.04)
 bat              # cat with syntax highlighting; man pager + fzf preview in zsh/.zshrc
 git-delta        # syntax-highlighting git pager; binary is `delta` (set in ~/.gitconfig)
+jj-cli           # Jujutsu VCS; binary is `jj` (frontend: jj.nvim in nvim config)
 du-dust          # `du` replacement; binary is `dust` (aliased to `du`)
 procs            # modern `ps` with search (aliased to `pps`)
 sd               # intuitive sed-style find/replace
