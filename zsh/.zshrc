@@ -166,3 +166,44 @@ fi
 
 # Use eza as ls when available, otherwise leave the builtin ls alone.
 command -v eza >/dev/null && alias ls=eza
+
+# --- Modern CLI tools (all guarded; a missing tool is just skipped) ---
+
+# bat: colourised cat + pager for man pages and fzf previews.
+if command -v bat >/dev/null; then
+  alias cat='bat --paging=never'
+  export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+  export MANROFFOPT='-c'
+  # show file contents in fzf Ctrl-T preview
+  export FZF_CTRL_T_OPTS="--preview 'bat -n --color=always --line-range :500 {} 2>/dev/null || ls -la {}'"
+fi
+
+# Handy aliases for the new tools (only set when installed).
+command -v lazygit >/dev/null && alias lg='lazygit'
+command -v btop    >/dev/null && alias top='btop'
+command -v dust    >/dev/null && alias du='dust'
+command -v duf     >/dev/null && alias df='duf'
+command -v procs   >/dev/null && alias pps='procs'
+
+# fkill: fuzzy-pick one or more processes with fzf and kill them.
+# Usage: fkill [signal]   (defaults to SIGKILL/9)
+fkill() {
+  local pids
+  pids=$(ps -ef | sed 1d | fzf -m --header='[fkill: TAB to multi-select]' | awk '{print $2}')
+  [ -n "$pids" ] && echo "$pids" | xargs -r kill "-${1:-9}"
+}
+
+# yazi: `y` opens the file manager and cd's to the last dir on quit.
+if command -v yazi >/dev/null; then
+  y() {
+    local tmp; tmp="$(mktemp -t yazi-cwd.XXXXXX)"
+    yazi "$@" --cwd-file="$tmp"
+    local cwd; cwd="$(command cat -- "$tmp")"
+    [ -n "$cwd" ] && [ "$cwd" != "$PWD" ] && builtin cd -- "$cwd"
+    rm -f -- "$tmp"
+  }
+fi
+
+# atuin: SQLite-backed shell history; owns Ctrl-R (sourced after fzf so it
+# wins that binding). --disable-up-arrow keeps Up/Down on history-substring-search.
+command -v atuin >/dev/null && eval "$(atuin init zsh --disable-up-arrow)"

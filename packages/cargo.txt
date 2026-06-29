@@ -4,5 +4,15 @@
 # One crate per line; # comments and blank lines are ignored.
 
 eza              # modern ls replacement; aliased to `ls` in zsh/.zshrc (not in apt on Pop 22.04)
+bat              # cat with syntax highlighting; man pager + fzf preview in zsh/.zshrc
+git-delta        # syntax-highlighting git pager; binary is `delta` (set in ~/.gitconfig)
+du-dust          # `du` replacement; binary is `dust` (aliased to `du`)
+procs            # modern `ps` with search (aliased to `pps`)
+sd               # intuitive sed-style find/replace
+hyperfine        # command-line benchmarking
+tealdeer         # fast tldr client; binary is `tldr`
+atuin            # SQLite shell history; owns Ctrl-R (init in zsh/.zshrc)
+yazi-fm          # terminal file manager; binary is `yazi` (`y` wrapper in zsh/.zshrc)
+yazi-cli         # yazi helper binary `ya` (plugin/package manager for yazi)
 spotify_player   # Spotify TUI (needs Spotify Premium for playback)
 # ncspot         # lighter Spotify TUI — uncomment to install instead of/alongside

@@ -64,6 +64,10 @@ flatpak                      # GUI apps from Flathub (see packages/flatpak.txt)
 zoxide
 fzf
 glow                         # (CHECK) markdown TUI viewer; may need charmbracelet apt repo
+btop                         # resource monitor (aliased to `top`); apt version is older
+duf                          # df replacement (aliased to `df`); apt version is older
+# lazygit                    # git TUI (aliased to `lg`); NOT in apt 22.04 — install from
+                             # github.com/jesseduffield/lazygit releases into ~/.local/bin
 
 # --- Rust toolchain + build deps for cargo TUIs (see packages/cargo.txt) ---
 rustup                       # (CHECK) else: cargo + rustc
