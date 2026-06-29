@@ -1,0 +1,16 @@
+[user]
+	name = sean-leishman
+	email = leishmansean@gmail.com
+[core]
+	autocrlf = input
+	pager = delta
+[credential]
+	helper = store
+[interactive]
+	diffFilter = delta --color-only
+[delta]
+	navigate = true
+	line-numbers = true
+	side-by-side = false
+[merge]
+	conflictStyle = zdiff3
