@@ -69,10 +69,23 @@ install_packages() {
 # ---------------------------------------------------------------------------
 install_oh_my_zsh() {
   local omz="${ZSH:-$HOME/.oh-my-zsh}"
-  if [ ! -d "$omz" ]; then
-    log "Installing Oh My Zsh"
-    RUNZSH=no CHSH=no KEEP_ZSHRC=yes \
-      sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+  # Gate on the framework entrypoint, NOT just the directory: the plugin loop
+  # below creates ~/.oh-my-zsh/custom/plugins/..., so the dir can exist while the
+  # framework itself is missing. A plain `-d` check skipped the framework install
+  # on every re-run, leaving .zshrc unable to source oh-my-zsh.sh.
+  if [ ! -f "$omz/oh-my-zsh.sh" ]; then
+    log "Installing Oh My Zsh framework"
+    # The official installer aborts when ~/.oh-my-zsh exists, so clone the repo
+    # to a temp dir and copy everything EXCEPT custom/ into place — that way any
+    # already-cloned plugins under custom/ survive.
+    local tmp; tmp="$(mktemp -d)"
+    if git clone --depth 1 -q https://github.com/ohmyzsh/ohmyzsh.git "$tmp/omz"; then
+      mkdir -p "$omz"
+      ( cd "$tmp/omz" && for f in $(ls -A | grep -v '^custom$'); do cp -a "$f" "$omz/"; done )
+    else
+      warn "Oh My Zsh clone failed; the shell will warn until it's installed."
+    fi
+    rm -rf "$tmp"
   else
     log "Oh My Zsh already present"
   fi
@@ -97,6 +110,18 @@ install_oh_my_posh() {
   mkdir -p "$HOME/.local/bin"
   curl -s https://ohmyposh.dev/install.sh | bash -s -- -d "$HOME/.local/bin" \
     || warn "oh-my-posh install failed; the shell prompt will warn until it's installed."
+}
+
+# uv (Astral's Python package/project manager). Installs to ~/.local/bin, which
+# the rc files already put on PATH. .zshrc runs `uv generate-shell-completion zsh`
+# at startup, so a missing uv makes every new shell print "command not found".
+install_uv() {
+  if command -v uv >/dev/null 2>&1 || [ -x "$HOME/.local/bin/uv" ]; then
+    log "uv already present"; return
+  fi
+  log "Installing uv -> ~/.local/bin"
+  curl -LsSf https://astral.sh/uv/install.sh | sh \
+    || warn "uv install failed; new shells will warn until uv is installed."
 }
 
 refresh_fonts() {
@@ -212,6 +237,7 @@ main() {
   init_submodules
   install_oh_my_zsh
   install_oh_my_posh
+  install_uv
   backup_and_stow
   install_tmux_plugins
   install_flatpaks
