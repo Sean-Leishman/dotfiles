@@ -3,3 +3,16 @@
 [user]
 name = "Sean Leishman"
 email = "leishmansean@gmail.com"
+
+[ui]
+# bare `jj` shows the log
+default-command = "log"
+editor = "nvim"
+# emit git-format diffs and page them through delta (shared with git via ~/.gitconfig)
+diff-formatter = ":git"
+pager = ["delta"]
+
+[aliases]
+l = ["log"]
+d = ["diff"]
+s = ["status"]

@@ -1,5 +1,11 @@
 export XDG_CONFIG_HOME=$HOME/.config
 
+# Preferred editor (git, jj, crontab, etc.); only set when nvim is available.
+if command -v nvim >/dev/null 2>&1; then
+  export EDITOR=nvim
+  export VISUAL=nvim
+fi
+
 # User specific environment and startup programs
 
 PATH=$PATH:$HOME/.local/bin:$HOME/bin:$HOME/.local/scripts
