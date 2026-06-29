@@ -19,7 +19,7 @@ cd "$DOTFILES_DIR"
 if [ -n "${STOW_FOLDERS:-}" ]; then
   IFS=',' read -r -a STOWED_FOLDERS <<< "$STOW_FOLDERS"
 else
-  STOWED_FOLDERS=(bash profile zsh git nvim tmux oh-my-posh gdb hypr waybar alacritty rofi walker waypaper bin)
+  STOWED_FOLDERS=(bash profile zsh git jj nvim tmux oh-my-posh gdb hypr waybar alacritty rofi walker waypaper bin)
 fi
 
 log()  { printf '\033[1;34m::\033[0m %s\n' "$*"; }
