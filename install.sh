@@ -3,7 +3,7 @@
 # One-shot dotfiles bootstrap.
 #   - installs system packages for your distro (packages/<distro>.txt)
 #   - installs oh-my-zsh + zsh plugins + oh-my-posh (idempotent)
-#   - refreshes the font cache
+#   - installs patched Nerd Fonts (Iosevka, FiraCode, …) + refreshes the font cache
 #   - symlinks every package into $HOME with GNU Stow, backing up any
 #     pre-existing real files first (so it never hard-fails on a fresh box)
 #
@@ -124,6 +124,48 @@ install_uv() {
     || warn "uv install failed; new shells will warn until uv is installed."
 }
 
+# Nerd Fonts (patched programming fonts with powerline/icon glyphs). The distro
+# packages ship the *unpatched* builds (see packages/*.txt), so waybar/rofi/alacritty
+# icons break on them — we pull the patched releases straight from ryanoasis/nerd-fonts
+# into ~/.local/share/fonts. Idempotent: skips any font whose dir already exists.
+# Override the set with NERD_FONTS="Iosevka,FiraCode", or skip with SKIP_NERD_FONTS=1.
+NERD_FONTS_VERSION="v3.4.0"
+install_nerd_fonts() {
+  [ -n "${SKIP_NERD_FONTS:-}" ] && { log "Skipping Nerd Fonts (SKIP_NERD_FONTS set)"; return 0; }
+  command -v curl >/dev/null || { warn "curl missing; skipping Nerd Fonts"; return 0; }
+  command -v unzip >/dev/null || { warn "unzip missing; skipping Nerd Fonts"; return 0; }
+
+  local fonts
+  if [ -n "${NERD_FONTS:-}" ]; then
+    IFS=',' read -r -a fonts <<< "$NERD_FONTS"
+  else
+    fonts=(Iosevka FiraCode JetBrainsMono CascadiaCode)
+  fi
+
+  local dest="$HOME/.local/share/fonts/nerd-fonts"
+  local base="https://github.com/ryanoasis/nerd-fonts/releases/download/$NERD_FONTS_VERSION"
+  mkdir -p "$dest"
+  local installed_any=""
+  for f in "${fonts[@]}"; do
+    if [ -d "$dest/$f" ] && [ -n "$(find "$dest/$f" -name '*.ttf' -o -name '*.otf' 2>/dev/null | head -1)" ]; then
+      log "Nerd Font already present: $f"
+      continue
+    fi
+    log "Installing Nerd Font: $f ($NERD_FONTS_VERSION)"
+    local tmp; tmp="$(mktemp -d)"
+    if curl -fL --retry 3 --connect-timeout 30 -o "$tmp/$f.zip" "$base/$f.zip"; then
+      mkdir -p "$dest/$f"
+      unzip -oq "$tmp/$f.zip" -d "$dest/$f" -x "*.md" "*.txt" "*Windows Compatible*" \
+        || unzip -oq "$tmp/$f.zip" -d "$dest/$f"
+      installed_any=1
+    else
+      warn "Nerd Font $f download failed (check network); skipping."
+    fi
+    rm -rf "$tmp"
+  done
+  [ -n "$installed_any" ] && refresh_fonts || true
+}
+
 refresh_fonts() {
   if command -v fc-cache >/dev/null; then log "Refreshing font cache"; fc-cache -f >/dev/null; fi
 }
@@ -233,6 +275,7 @@ backup_and_stow() {
 main() {
   log "Dotfiles bootstrap starting (distro: $(distro_id))"
   install_packages
+  install_nerd_fonts
   refresh_fonts
   init_submodules
   install_oh_my_zsh

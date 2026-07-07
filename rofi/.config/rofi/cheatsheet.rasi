@@ -5,7 +5,7 @@
     this stays a pure theme and its colors resolve correctly.) */
 
 * {
-    font: "Cascadia Code NF 13";
+    font: "Iosevka Nerd Font 13";
 }
 
 window {

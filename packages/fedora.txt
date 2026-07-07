@@ -40,7 +40,9 @@ gvfs
 tumbler
 
 # --- Fonts (waybar icons + nice UI font + fallbacks) ---
-cascadia-code-nf-fonts   # Cascadia Code Nerd Font (waybar font + glyphs)
+# NOTE: the patched programming Nerd Fonts (Iosevka, FiraCode, JetBrainsMono,
+# CascadiaCode) are installed by install.sh's install_nerd_fonts() from
+# ryanoasis/nerd-fonts; the packages below are icon/text fallbacks only.
 fontawesome-6-free-fonts # extra icon coverage
 google-noto-sans-fonts   # text fallback
 

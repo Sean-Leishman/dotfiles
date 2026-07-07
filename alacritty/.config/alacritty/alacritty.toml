@@ -30,9 +30,9 @@ bindings = [
 
 [font]
 size = 11.0
-normal = { family = "Cascadia Code NF", style = "Regular" }
-bold   = { family = "Cascadia Code NF", style = "Bold" }
-italic = { family = "Cascadia Code NF", style = "Italic" }
+normal = { family = "Iosevka Nerd Font", style = "Regular" }
+bold   = { family = "Iosevka Nerd Font", style = "Bold" }
+italic = { family = "Iosevka Nerd Font", style = "Italic" }
 
 # --- Embark palette ---
 [colors.primary]

@@ -14,7 +14,7 @@ configuration {
 * {
     background-color: transparent;
     text-color:       #cbe3e7;
-    font:             "Cascadia Code NF 12";
+    font:             "Iosevka Nerd Font 12";
 }
 
 window {

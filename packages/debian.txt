@@ -47,10 +47,11 @@ gvfs
 tumbler
 
 # --- Fonts ---
+# NOTE: the patched Nerd Fonts (Iosevka, FiraCode, JetBrainsMono, CascadiaCode)
+# used by alacritty/waybar/rofi are installed by install.sh's install_nerd_fonts()
+# straight from ryanoasis/nerd-fonts — the apt packages below are only unpatched
+# builds / text fallbacks, so don't rely on them for icon glyphs.
 fonts-font-awesome
-fonts-cascadia-code          # (CHECK) NOT the Nerd-Font-patched build; if waybar icons
-                             #   show as boxes, install "Cascadia Code NF" manually:
-                             #   https://github.com/microsoft/cascadia-code/releases
 fonts-noto-core
 
 # --- Base tooling for the dotfiles themselves ---
