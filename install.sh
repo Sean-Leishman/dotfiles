@@ -191,7 +191,12 @@ install_cargo_crates() {
   command -v cargo >/dev/null || { warn "cargo unavailable; skipping cargo crates (install 'rustup' + run rustup-init)"; return 0; }
   while IFS= read -r crate; do
     log "cargo install $crate"
-    cargo install "$crate" || warn "cargo install $crate failed (check build deps)"
+    # yazi-build only installs with --force (it ships `yazi`/`ya`, not a `yazi-build` binary)
+    if [ "$crate" = yazi-build ]; then
+      cargo install --force yazi-build || warn "cargo install yazi-build failed (check build deps)"
+    else
+      cargo install "$crate" || warn "cargo install $crate failed (check build deps)"
+    fi
   done < <(pkglist packages/cargo.txt)
 }
 

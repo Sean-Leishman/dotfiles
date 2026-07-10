@@ -13,7 +13,6 @@ sd               # intuitive sed-style find/replace
 hyperfine        # command-line benchmarking
 tealdeer         # fast tldr client; binary is `tldr`
 atuin            # SQLite shell history; owns Ctrl-R (init in zsh/.zshrc)
-yazi-fm          # terminal file manager; binary is `yazi` (`y` wrapper in zsh/.zshrc)
-yazi-cli         # yazi helper binary `ya` (plugin/package manager for yazi)
+yazi-build       # builds/installs both `yazi` (file manager) and `ya` (plugin mgr); crates.io yazi-fm/yazi-cli are stubs that refuse to build directly
 spotify_player   # Spotify TUI (needs Spotify Premium for playback)
 # ncspot         # lighter Spotify TUI — uncomment to install instead of/alongside
