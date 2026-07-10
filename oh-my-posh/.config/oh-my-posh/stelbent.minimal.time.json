@@ -50,7 +50,7 @@
         },
         {
           "foreground": "#95ffa4",
-          "background_templates": [
+          "foreground_templates": [
             "{{ if or (.Working.Changed) (.Staging.Changed) }}#ff9248{{ end }}",
             "{{ if and (gt .Ahead 0) (gt .Behind 0) }}#f26d50{{ end }}",
             "{{ if gt .Ahead 0 }}#89d1dc{{ end }}",
