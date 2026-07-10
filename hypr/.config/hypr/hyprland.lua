@@ -84,7 +84,7 @@ hl.env("DBUS_SESSION_BUS_ADDRESS", "unix:path=/run/user/1000/bus")
 hl.config({
     general = {
         gaps_in  = 5,
-        gaps_out = 20,
+        gaps_out = 8,
 
         border_size = 2,
 
@@ -160,6 +160,10 @@ hl.animation({ leaf = "workspaces",    enabled = true,  speed = 1.7,  bezier = "
 hl.animation({ leaf = "workspacesIn",  enabled = true,  speed = 1.1,  bezier = "snappy",       style = "fade" })
 hl.animation({ leaf = "workspacesOut", enabled = true,  speed = 1.7,  bezier = "snappy",       style = "fade" })
 hl.animation({ leaf = "zoomFactor",    enabled = true,  speed = 7,    bezier = "quick" })
+
+-- Default apps per workspace: landing on the empty workspace auto-launches it
+hl.workspace_rule({ workspace = "1", on_created_empty = terminal })
+hl.workspace_rule({ workspace = "2", on_created_empty = browser })
 
 -- Ref https://wiki.hypr.land/Configuring/Basics/Workspace-Rules/
 -- "Smart gaps" / "No gaps when only"
@@ -412,6 +416,8 @@ hl.on("hyprland.start", function ()
     -- Status bar and wallpaper (safe in both nested and standalone sessions)
     hl.exec_cmd("waybar")
     hl.exec_cmd("hyprpaper")
+    -- Re-apply the wallpaper last picked in waypaper (hyprpaper.conf only has the fallback)
+    hl.exec_cmd("sh -c 'sleep 1; waypaper --restore'")
 
     -- Clipboard history watchers — safe nested or standalone
     hl.exec_cmd("wl-paste --type text  --watch cliphist store")
