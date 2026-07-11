@@ -246,7 +246,10 @@ init_submodules() {
   [ -f .gitmodules ] || return 0
   command -v git >/dev/null || { warn "git not found; cannot init submodules"; return 0; }
   log "Initializing git submodules (nvim config)"
-  git submodule update --init --recursive
+  # The nvim submodule uses an SSH remote, so this fails on a fresh box with no key
+  # loaded. Warn instead of dying (set -e) — the rest of the bootstrap still works.
+  git submodule update --init --recursive \
+    || warn "submodule init failed (SSH key not set up?); nvim will have no config until: git submodule update --init"
 }
 
 # ---------------------------------------------------------------------------
@@ -262,18 +265,25 @@ backup_and_stow() {
     # Move any pre-existing, NON-symlink target out of the way so stow won't abort.
     while IFS= read -r rel; do
       local dest="$HOME/$rel"
-      if [ -e "$dest" ] && [ ! -L "$dest" ]; then
-        mkdir -p "$backup/$(dirname "$rel")"
-        mv "$dest" "$backup/$rel"
-        log "Backed up $dest"
-      fi
+      [ -e "$dest" ] && [ ! -L "$dest" ] || continue
+      # -L only tests the LAST component. On a re-run a PARENT dir is often already a
+      # stow symlink into this repo (tree folding), so $dest resolves back to the very
+      # file we're about to "back up" — and mv would rip it out of the repo. That is
+      # what emptied the nvim submodule working tree. Only back up files that really
+      # live outside $DOTFILES_DIR.
+      case "$(readlink -f "$dest")" in "$DOTFILES_DIR"/*) continue ;; esac
+      mkdir -p "$backup/$(dirname "$rel")"
+      mv "$dest" "$backup/$rel"
+      log "Backed up $dest"
     done < <(find "$pkg" -type f -printf '%P\n')
 
     log "Stowing $pkg"
     stow -R -d "$DOTFILES_DIR" -t "$HOME" "$pkg"
   done
 
-  [ -d "$backup" ] && log "Pre-existing files were saved under: $backup"
+  # Trailing `[ -d ] && log` would return 1 when nothing needed backing up, and set -e
+  # would abort the rest of the bootstrap. Keep the `|| true`.
+  [ -d "$backup" ] && log "Pre-existing files were saved under: $backup" || true
 }
 
 # ---------------------------------------------------------------------------
