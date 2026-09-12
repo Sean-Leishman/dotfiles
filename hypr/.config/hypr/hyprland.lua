@@ -441,6 +441,14 @@ hl.on("hyprland.start", function ()
             # Share display env with the systemd user + dbus activation context
             dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=Hyprland
 
+            # xdg-desktop-portal.service has Requisite=graphical-session.target and
+            # graphical-session.target is RefuseManualStart=yes -- so the portal can ONLY
+            # start once something pulls that target in. Nothing here did, which meant the
+            # `start xdg-desktop-portal` below failed every single session with
+            # "A dependency job for xdg-desktop-portal.service failed". hyprland-session.target
+            # (shipped in this package, BindsTo=graphical-session.target) is what activates it.
+            systemctl --user start hyprland-session.target
+
             # Restart portals so they pick up the Hyprland environment
             systemctl --user stop xdg-desktop-portal xdg-desktop-portal-hyprland
             systemctl --user start xdg-desktop-portal
