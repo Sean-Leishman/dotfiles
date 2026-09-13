@@ -13,14 +13,36 @@ set -euo pipefail
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$DOTFILES_DIR"
 
+# --server: headless box. Skips the whole GUI stack -- no Hyprland/waybar/rofi
+# packages, no Nerd Fonts (glyphs are rendered by your LOCAL terminal over SSH,
+# never by the server), no flatpaks, no wallpapers, no cargo crates. Stows only
+# the packages that mean anything without a display.
+SERVER=0
+for arg in "$@"; do
+  case "$arg" in
+    --server) SERVER=1 ;;
+    -h|--help)
+      echo "Usage: ./install.sh [--server]"
+      echo "  --server   headless: shell/editor config only, no GUI packages or fonts"
+      echo "Env: STOW_FOLDERS=a,b,c   override which packages get stowed"
+      exit 0 ;;
+    *) echo "unknown option: $arg (try --help)" >&2; exit 2 ;;
+  esac
+done
+
 # Stow packages (each dir mirrors $HOME). Order doesn't matter.
 # Override by exporting STOW_FOLDERS as a comma-separated list, e.g.
 #   STOW_FOLDERS=bash,hypr,waybar ./install.sh
 if [ -n "${STOW_FOLDERS:-}" ]; then
   IFS=',' read -r -a STOWED_FOLDERS <<< "$STOW_FOLDERS"
+elif [ "$SERVER" -eq 1 ]; then
+  STOWED_FOLDERS=(bash profile zsh git jj nvim tmux oh-my-posh gdb bin)
 else
   STOWED_FOLDERS=(bash profile zsh git jj nvim tmux oh-my-posh gdb hypr waybar alacritty rofi walker waypaper bin)
 fi
+
+# The subset of packages/<distro>.txt worth having with no display attached.
+SERVER_PKGS=(stow git curl zsh tmux neovim zoxide fzf)
 
 log()  { printf '\033[1;34m::\033[0m %s\n' "$*"; }
 warn() { printf '\033[1;33m!!\033[0m %s\n' "$*" >&2; }
@@ -39,6 +61,11 @@ install_packages() {
   case "$id" in
     fedora)
       command -v dnf >/dev/null || die "dnf not found on a Fedora system?"
+      if [ "$SERVER" -eq 1 ]; then
+        log "Installing server package subset via dnf (${#SERVER_PKGS[@]} packages)"
+        sudo dnf install -y "${SERVER_PKGS[@]}"
+        return
+      fi
       log "Installing packages via dnf (packages/fedora.txt)"
       # shellcheck disable=SC2046
       sudo dnf install -y $(pkglist packages/fedora.txt)
@@ -51,6 +78,12 @@ install_packages() {
       ;;
     debian|ubuntu|pop|linuxmint|neon)
       command -v apt-get >/dev/null || die "apt-get not found on a Debian-like system?"
+      if [ "$SERVER" -eq 1 ]; then
+        log "Installing server package subset via apt (${#SERVER_PKGS[@]} packages)"
+        sudo apt-get update
+        sudo apt-get install -y "${SERVER_PKGS[@]}"
+        return
+      fi
       log "Installing packages via apt (packages/debian.txt)"
       sudo apt-get update
       # shellcheck disable=SC2046
@@ -288,20 +321,25 @@ backup_and_stow() {
 
 # ---------------------------------------------------------------------------
 main() {
-  log "Dotfiles bootstrap starting (distro: $(distro_id))"
+  log "Dotfiles bootstrap starting (distro: $(distro_id)$([ "$SERVER" -eq 1 ] && echo ", server mode"))"
   install_packages
-  install_nerd_fonts
-  refresh_fonts
+  # Fonts are rendered by the CLIENT terminal over SSH, never by the server.
+  if [ "$SERVER" -eq 0 ]; then
+    install_nerd_fonts
+    refresh_fonts
+  fi
   init_submodules
   install_oh_my_zsh
   install_oh_my_posh
   install_uv
   backup_and_stow
   install_tmux_plugins
-  install_flatpaks
-  install_cargo_crates
+  if [ "$SERVER" -eq 0 ]; then
+    install_flatpaks
+    install_cargo_crates
+  fi
   install_tailscale
-  if [ -x bin/.local/scripts/fetch-wallpapers ]; then
+  if [ "$SERVER" -eq 0 ] && [ -x bin/.local/scripts/fetch-wallpapers ]; then
     log "Fetching wallpapers -> ~/Pictures/wallpapers"
     bin/.local/scripts/fetch-wallpapers || warn "wallpaper fetch failed (non-fatal)"
   fi
@@ -310,7 +348,9 @@ main() {
   echo "Next steps:"
   echo "  - Set zsh as your login shell:   chsh -s \"\$(command -v zsh)\""
   echo "  - Connect Tailscale (one-time):   sudo tailscale up"
-  echo "  - Log out, then pick the 'Hyprland' session at your display manager"
-  echo "    (or from a TTY run:  Hyprland  — uses the no-nest wrapper in ~/.bash_profile)."
+  if [ "$SERVER" -eq 0 ]; then
+    echo "  - Log out, then pick the 'Hyprland' session at your display manager"
+    echo "    (or from a TTY run:  Hyprland  — uses the no-nest wrapper in ~/.bash_profile)."
+  fi
 }
 main "$@"
