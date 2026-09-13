@@ -140,7 +140,19 @@ unset __conda_setup
 source ~/.profile
 alias icat="kitten icat"
 
-eval "$(oh-my-posh init zsh --config ~/.config/oh-my-posh/stelbent.minimal.time.json)"
+# oh-my-posh draws its prompt with Nerd Font glyphs, which the LOCAL terminal
+# renders -- so it is correct over SSH to any box, however bare that box is.
+# The exception is the physical console (TERM=linux): the kernel framebuffer
+# font has no Nerd Font glyphs, so every icon renders as a tofu box. Headless
+# servers are exactly where you end up on a TTY, so degrade there instead.
+if [[ "$TERM" == "linux" || "$TERM" == "dumb" ]]; then
+  PROMPT='%F{green}%n@%m%f:%F{blue}%~%f%# '
+elif command -v oh-my-posh >/dev/null 2>&1; then
+  eval "$(oh-my-posh init zsh --config ~/.config/oh-my-posh/stelbent.minimal.time.json)"
+else
+  # oh-my-posh not installed (e.g. `stow`-only setup on a server, no install.sh)
+  PROMPT='%F{green}%n@%m%f:%F{blue}%~%f%# '
+fi
 eval "$(zoxide init zsh)"
 
 POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(anaconda ...ENVS)
