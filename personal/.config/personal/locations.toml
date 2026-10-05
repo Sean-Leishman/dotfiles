@@ -1,0 +1,9 @@
+# Named places my own tools measure from: [longitude, latitude].
+# Read by obsidian_helper (the places map) and doorstep (the rental scorer).
+# Lives in ~/Projects/dotfiles/personal, symlinked to ~/.config/personal/ -- edit it once
+# here and every tool follows. A tool's own config can still override it.
+
+origin = "moorgate"   # where "how far is it from me" is measured from
+
+[locations]
+moorgate = [-0.08906, 51.51825]   # Moorgate station (Nominatim, 2026-10-05)
