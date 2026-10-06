@@ -1,3 +1,6 @@
 
 # TPM manages tmux plugins at ~/.tmux/plugins at runtime; never track them
 tmux/.config/tmux/plugins/
+
+# jj per-repo configs keyed by local repo hash; machine-specific
+jj/.config/jj/repos/
