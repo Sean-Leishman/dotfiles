@@ -164,6 +164,7 @@ hl.animation({ leaf = "zoomFactor",    enabled = true,  speed = 7,    bezier = "
 -- Default apps per workspace: landing on the empty workspace auto-launches it
 hl.workspace_rule({ workspace = "1", on_created_empty = terminal })
 hl.workspace_rule({ workspace = "2", on_created_empty = browser })
+hl.workspace_rule({ workspace = "3", on_created_empty = "flatpak run md.obsidian.Obsidian" })
 
 -- Ref https://wiki.hypr.land/Configuring/Basics/Workspace-Rules/
 -- "Smart gaps" / "No gaps when only"
