@@ -61,6 +61,14 @@ if [[ ! -s "$out" ]]; then
 fi
 none="tuicr: ${msg:-no review comments}"
 
+# Keep every delivered review. Comments that keep recurring here are candidates for a standing
+# rule (CLAUDE.md / AGENTS.md) or, better, a lint or hook.
+if [[ -s "$out" ]]; then
+  log=${XDG_DATA_HOME:-$HOME/.local/share}/tuicr-popup/reviews.md
+  mkdir -p "${log%/*}"
+  { printf '\n## %s — %s\n\n' "$(date '+%F %H:%M')" "$PWD"; cat "$out"; } >>"$log"
+fi
+
 # Comments are about to be delivered: clear them so the next round starts clean (review marks are kept).
 if [[ -s "$out" && -n "$slug" ]]; then "$tuicr" review clearc --session "$slug" &>/dev/null || true; fi
 
