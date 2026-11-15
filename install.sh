@@ -36,9 +36,9 @@ done
 if [ -n "${STOW_FOLDERS:-}" ]; then
   IFS=',' read -r -a STOWED_FOLDERS <<< "$STOW_FOLDERS"
 elif [ "$SERVER" -eq 1 ]; then
-  STOWED_FOLDERS=(bash profile zsh git jj nvim tmux oh-my-posh gdb bin)
+  STOWED_FOLDERS=(bash profile zsh git jj nvim tmux oh-my-posh gdb bin claude opencode)
 else
-  STOWED_FOLDERS=(bash profile zsh git jj nvim tmux oh-my-posh gdb hypr waybar alacritty rofi walker waypaper bin)
+  STOWED_FOLDERS=(bash profile zsh git jj nvim tmux oh-my-posh gdb hypr waybar alacritty rofi walker waypaper bin claude opencode)
 fi
 
 # The subset of packages/<distro>.txt worth having with no display attached.
