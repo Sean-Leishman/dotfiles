@@ -38,7 +38,8 @@ while tmux list-panes -a -F '#{pane_id}' | grep -qx "$pane"; do sleep 0.5; done
 if [[ ! -s "$out" ]]; then
   slug=$(sed -n 's/^tuicr-session: //p' "$err")
   if [[ -n "$slug" ]]; then
-    "$tuicr" review comments --session "$slug" | jq -r '
+    # tuicr names a session even when it never saved one (nothing commented): that is "no comments".
+    { "$tuicr" review comments --session "$slug" 2>/dev/null || echo '[]'; } | jq -r '
       if length == 0 then empty else
         "I reviewed your code and have the following comments. Please address them.\n",
         (to_entries[] | "\(.key + 1). `\(.value.location)` - \(.value.content)")
