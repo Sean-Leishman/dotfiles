@@ -35,8 +35,8 @@ while tmux list-panes -a -F '#{pane_id}' | grep -qx "$pane"; do sleep 0.5; done
 
 # tuicr only exports on :wq / :x / ZZ / y. After a plain :q the comments are still saved in the
 # session it names on stderr, so read them from there instead of reporting an empty review.
+slug=$(sed -n 's/^tuicr-session: //p' "$err")
 if [[ ! -s "$out" ]]; then
-  slug=$(sed -n 's/^tuicr-session: //p' "$err")
   if [[ -n "$slug" ]]; then
     # tuicr names a session even when it never saved one (nothing commented): that is "no comments".
     { "$tuicr" review comments --session "$slug" 2>/dev/null || echo '[]'; } | jq -r '
@@ -49,6 +49,9 @@ if [[ ! -s "$out" ]]; then
   fi
 fi
 none="tuicr: ${msg:-no review comments}"
+
+# Comments are about to be delivered: clear them so the next round starts clean (review marks are kept).
+if [[ -s "$out" && -n "$slug" ]]; then "$tuicr" review clearc --session "$slug" &>/dev/null || true; fi
 
 if [[ -n "${TUICR_PASTE:-}" ]]; then
   # Keybinding mode: paste the review into the pane we were launched from (no Enter; you send it).
