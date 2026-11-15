@@ -6,21 +6,28 @@ set -euo pipefail
 [[ -n "${TMUX:-}" ]] || { echo "tuicr-popup: not inside tmux" >&2; exit 1; }
 tuicr=$(command -v tuicr) || { echo "tuicr-popup: tuicr not installed" >&2; exit 1; }
 
+is_jj()  { jj root --ignore-working-copy &>/dev/null; }
+in_repo() { is_jj || git rev-parse --git-dir &>/dev/null; }
+dirty() {
+  if is_jj; then [[ $(jj log -r @ --no-graph -T empty 2>/dev/null) == false ]]   # @ has changes
+  else [[ -n "$(git status --porcelain 2>/dev/null)" ]]; fi
+}
+
 # Not in a repo (e.g. agent started in ~/Projects): pick a child repo, most recently touched first.
-# ponytail: git children one level down only; add jj / deeper search if needed.
-if ! git rev-parse --git-dir &>/dev/null; then
-  pick=$(mktemp)
+# ponytail: git/jj children one level down only; search deeper if needed.
+if ! in_repo; then
+  pick=$(mktemp) list=$(mktemp)
+  # Build the list here in bash: the popup runs under the login shell, where zsh aborts on an unmatched glob.
+  { ls -dt -- */.git */.jj 2>/dev/null || true; } | sed 's|/\.[a-z]*$||' | awk '!seen[$0]++' >"$list"
   tmux display-popup -E -w 50% -h 60% -d "$PWD" ${TMUX_PANE:+-t "$TMUX_PANE"} \
-    "ls -dt */.git 2>/dev/null | sed 's|/.git\$||' | fzf --prompt='review repo> ' >'$pick'" || true
-  repo=$(<"$pick"); rm -f "$pick"
+    "fzf --prompt='review repo> ' <'$list' >'$pick'" || true
+  repo=$(<"$pick"); rm -f "$pick" "$list"
   [[ -n "$repo" ]] || exit 0
   cd "$repo"
 fi
 
-# Default: uncommitted changes; if the tree is clean (agent already committed), tuicr's commit picker.
-if ! (($#)) && { [[ -n "$(git status --porcelain 2>/dev/null)" ]] || ! git rev-parse --git-dir &>/dev/null; }; then
-  set -- -w
-fi
+# Default: uncommitted changes; if the working copy is clean (agent already committed), tuicr's commit picker.
+if ! (($#)) && dirty; then set -- -w; fi
 out=$(mktemp) err=$(mktemp)
 trap 'rm -f "$out" "$err"' EXIT
 
