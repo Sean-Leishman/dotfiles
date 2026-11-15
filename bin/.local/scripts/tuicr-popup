@@ -26,6 +26,10 @@ if ! in_repo; then
   cd "$repo"
 fi
 
+# Run from the repo root: tuicr only resolves saved sessions (the :q fallback) from there.
+# Inside a submodule or worktree this is that submodule's / worktree's own root.
+cd "$(jj root --ignore-working-copy 2>/dev/null || git rev-parse --show-toplevel)"
+
 # Default: uncommitted changes; if the working copy is clean (agent already committed), tuicr's commit picker.
 if ! (($#)) && dirty; then set -- -w; fi
 out=$(mktemp) err=$(mktemp)
