@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+# Open tuicr in its own tmux window; print the exported review when it closes.
+# Usage: tuicr-popup [tuicr args...]   (default: uncommitted changes, or the commit picker if clean)
+set -euo pipefail
+
+[[ -n "${TMUX:-}" ]] || { echo "tuicr-popup: not inside tmux" >&2; exit 1; }
+tuicr=$(command -v tuicr) || { echo "tuicr-popup: tuicr not installed" >&2; exit 1; }
+
+# Not in a repo (e.g. agent started in ~/Projects): pick a child repo, most recently touched first.
+# ponytail: git children one level down only; add jj / deeper search if needed.
+if ! git rev-parse --git-dir &>/dev/null; then
+  pick=$(mktemp)
+  tmux display-popup -E -w 50% -h 60% -d "$PWD" ${TMUX_PANE:+-t "$TMUX_PANE"} \
+    "ls -dt */.git 2>/dev/null | sed 's|/.git\$||' | fzf --prompt='review repo> ' >'$pick'" || true
+  repo=$(<"$pick"); rm -f "$pick"
+  [[ -n "$repo" ]] || exit 0
+  cd "$repo"
+fi
+
+# Default: uncommitted changes; if the tree is clean (agent already committed), tuicr's commit picker.
+if ! (($#)) && { [[ -n "$(git status --porcelain 2>/dev/null)" ]] || ! git rev-parse --git-dir &>/dev/null; }; then
+  set -- -w
+fi
+out=$(mktemp) err=$(mktemp)
+trap 'rm -f "$out" "$err"' EXIT
+
+# Absolute tuicr path: the window inherits the tmux server's PATH, not ours.
+# -a -t window: open next to the agent's window, in its session.
+win=$(tmux display-message -p ${TMUX_PANE:+-t "$TMUX_PANE"} '#{window_id}')
+pane=$(tmux new-window -P -F '#{pane_id}' -n tuicr -c "$PWD" -a -t "$win" \
+  -- sh -c 'out=$1 err=$2; shift 2; exec "$@" --stdout >"$out" 2>"$err"' sh "$out" "$err" "$tuicr" "$@")
+
+# ponytail: poll until the pane is gone (covers quit, crash and kill-window alike)
+while tmux list-panes -a -F '#{pane_id}' | grep -qx "$pane"; do sleep 0.5; done
+
+# tuicr only exports on :wq / :x / ZZ / y. After a plain :q the comments are still saved in the
+# session it names on stderr, so read them from there instead of reporting an empty review.
+if [[ ! -s "$out" ]]; then
+  slug=$(sed -n 's/^tuicr-session: //p' "$err")
+  if [[ -n "$slug" ]]; then
+    "$tuicr" review comments --session "$slug" | jq -r '
+      if length == 0 then empty else
+        "I reviewed your code and have the following comments. Please address them.\n",
+        (to_entries[] | "\(.key + 1). `\(.value.location)` - \(.value.content)")
+      end' >"$out"
+  else
+    msg=$(grep -v '^tuicr-' "$err" | head -1 || true)   # e.g. "Error: No changes to review"
+  fi
+fi
+none="tuicr: ${msg:-no review comments}"
+
+if [[ -n "${TUICR_PASTE:-}" ]]; then
+  # Keybinding mode: paste the review into the pane we were launched from (no Enter; you send it).
+  if [[ -s "$out" ]]; then
+    tmux load-buffer -b tuicr "$out"
+    tmux paste-buffer -p -d -b tuicr -t "$TMUX_PANE"
+  else
+    tmux display-message "$none"
+  fi
+elif [[ -s "$out" ]]; then cat "$out"; else echo "$none"; fi
