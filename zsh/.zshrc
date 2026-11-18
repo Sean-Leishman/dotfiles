@@ -219,3 +219,9 @@ fi
 # atuin: SQLite-backed shell history; owns Ctrl-R (sourced after fzf so it
 # wins that binding). --disable-up-arrow keeps Up/Down on history-substring-search.
 command -v atuin >/dev/null && eval "$(atuin init zsh --disable-up-arrow)"
+
+# kimi-code
+export PATH="/home/seanleishman/.kimi-code/bin:$PATH"
+
+# opencode
+export PATH=/home/seanleishman/.opencode/bin:$PATH
