@@ -1,0 +1,10 @@
+#!/bin/sh
+# Study workspace: tmux (session "study", in the vault) on the left, Obsidian on the right.
+# Obsidian is single-instance, so if it's already open, pull its window here instead of launching.
+alacritty -e tmux new -A -s study -c "$HOME/Projects/Nordorn" &
+sleep 0.3  # let the terminal map first so dwindle puts it on the left
+if hyprctl clients -j | grep -q '"class": "md.obsidian.Obsidian"'; then
+    hyprctl dispatch "hl.dsp.window.move({ workspace = 4, follow = false, window = \"class:^(md\\\\.obsidian\\\\.Obsidian)\$\" })"
+else
+    flatpak run md.obsidian.Obsidian &
+fi
