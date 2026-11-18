@@ -274,6 +274,7 @@ hl.bind(mainMod .. " + SHIFT + R", hl.dsp.exec_cmd("rofi -show drun")) -- launch
 hl.bind(mainMod .. " + B", hl.dsp.exec_cmd(browser))                  -- web browser (firefox)
 hl.bind(mainMod .. " + W", hl.dsp.exec_cmd("waypaper"))               -- wallpaper picker
 hl.bind(mainMod .. " + SHIFT + slash", hl.dsp.exec_cmd("$HOME/.local/scripts/hypr-keys")) -- keybind cheatsheet
+hl.bind(mainMod .. " + T", hl.dsp.exec_cmd("$HOME/Projects/claude-teach/scripts/teach-session.sh")) -- teach: Claude (voice) + Obsidian on ws 4
 hl.bind(mainMod .. " + P", hl.dsp.window.pseudo())
 hl.bind(mainMod .. " + J", hl.dsp.layout("togglesplit"))    -- dwindle only
 hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen())
