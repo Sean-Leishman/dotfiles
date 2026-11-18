@@ -36,9 +36,9 @@ done
 if [ -n "${STOW_FOLDERS:-}" ]; then
   IFS=',' read -r -a STOWED_FOLDERS <<< "$STOW_FOLDERS"
 elif [ "$SERVER" -eq 1 ]; then
-  STOWED_FOLDERS=(bash profile zsh git jj nvim tmux oh-my-posh gdb bin claude opencode)
+  STOWED_FOLDERS=(bash profile zsh git jj nvim tmux oh-my-posh gdb bin opencode)
 else
-  STOWED_FOLDERS=(bash profile zsh git jj nvim tmux oh-my-posh gdb hypr waybar alacritty rofi walker waypaper bin claude opencode)
+  STOWED_FOLDERS=(bash profile zsh git jj nvim tmux oh-my-posh gdb hypr waybar alacritty rofi walker waypaper bin opencode)
 fi
 
 # The subset of packages/<distro>.txt worth having with no display attached.
@@ -273,6 +273,16 @@ install_tmux_plugins() {
   fi
 }
 
+# Claude Code mods kept in this repo (claude-plugins/). Installed from the folder itself, so an
+# edit here reaches a session with /reload-plugins, no reinstall.
+install_claude_plugins() {
+  command -v claude >/dev/null || return 0
+  log "Installing Claude Code mods from claude-plugins/"
+  claude plugin marketplace add "$DOTFILES_DIR/claude-plugins" \
+    && claude plugin install tuicr@dotfiles --scope user \
+    || warn "Claude Code mod install failed; run: claude plugin marketplace add $DOTFILES_DIR/claude-plugins && claude plugin install tuicr@dotfiles"
+}
+
 # Pull in submodules (the nvim config lives in its own repo). Harmless if the
 # repo was cloned with --recursive already, or if there are no submodules.
 init_submodules() {
@@ -334,6 +344,7 @@ main() {
   install_uv
   backup_and_stow
   install_tmux_plugins
+  install_claude_plugins
   if [ "$SERVER" -eq 0 ]; then
     install_flatpaks
     install_cargo_crates

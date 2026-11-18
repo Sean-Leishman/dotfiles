@@ -1,0 +1,1 @@
+{ "name": "tuicr", "version": "0.1.0", "description": "/tuicr opens a tuicr diff review in its own tmux window and sends your comments straight to Claude, with no model turn to launch it" }
