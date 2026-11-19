@@ -16,3 +16,4 @@ atuin            # SQLite shell history; owns Ctrl-R (init in zsh/.zshrc)
 yazi-build       # builds/installs both `yazi` (file manager) and `ya` (plugin mgr); crates.io yazi-fm/yazi-cli are stubs that refuse to build directly
 spotify_player   # Spotify TUI (needs Spotify Premium for playback)
 # ncspot         # lighter Spotify TUI — uncomment to install instead of/alongside
+tuicr            # diff review TUI; opened by ~/.local/scripts/tuicr-popup (tmux prefix R, /tuicr in Claude Code and opencode)

@@ -221,7 +221,7 @@ fi
 command -v atuin >/dev/null && eval "$(atuin init zsh --disable-up-arrow)"
 
 # kimi-code
-export PATH="/home/seanleishman/.kimi-code/bin:$PATH"
+export PATH="$HOME/.kimi-code/bin:$PATH"
 
 # opencode
-export PATH=/home/seanleishman/.opencode/bin:$PATH
+export PATH="$HOME/.opencode/bin:$PATH"

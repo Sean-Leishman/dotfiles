@@ -79,3 +79,4 @@ libssl-dev
 libdbus-1-dev
 libpulse-dev
 libncurses-dev               # ncspot
+jq                     # JSON on the command line; tuicr-popup reads saved review comments with it

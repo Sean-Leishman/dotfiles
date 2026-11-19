@@ -68,3 +68,4 @@ openssl-devel
 dbus-devel
 pulseaudio-libs-devel  # (NOT libpulse-devel on Fedora)
 ncurses-devel          # ncspot
+jq                     # JSON on the command line; tuicr-popup reads saved review comments with it
