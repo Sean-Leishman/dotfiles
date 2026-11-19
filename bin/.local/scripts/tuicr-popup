@@ -69,6 +69,15 @@ if [[ -s "$out" ]]; then
   { printf '\n## %s — %s\n\n' "$(date '+%F %H:%M')" "$PWD"; cat "$out"; } >>"$log"
 fi
 
+# One line per run, whatever the outcome, so "reviewed and approved" can be told apart from
+# "never opened" when judging whether this tool is actually used.
+{
+  mkdir -p "${XDG_DATA_HOME:-$HOME/.local/share}/tuicr-popup"
+  if [[ -s "$out" ]]; then outcome="comments=$(grep -c -E '^[0-9]+\. ' "$out" || true)"
+  elif [[ -n "${msg:-}" ]]; then outcome="error"; else outcome="no-comments"; fi
+  printf '%s\t%s\t%s\n' "$(date '+%F %H:%M')" "$PWD" "$outcome" >>"${XDG_DATA_HOME:-$HOME/.local/share}/tuicr-popup/usage.log"
+} 2>/dev/null || true
+
 # Comments are about to be delivered: clear them so the next round starts clean (review marks are kept).
 if [[ -s "$out" && -n "$slug" ]]; then "$tuicr" review clearc --session "$slug" &>/dev/null || true; fi
 
